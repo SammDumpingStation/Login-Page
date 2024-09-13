@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ]
+, "components/CustomContainer.jsx", "app/index.jsx", "app/_layout.jsx", "app/(login)/_layout.jsx", "app/(login)/sign-in.jsx", "app/(login)/sign-up.jsx"  ]
 }
