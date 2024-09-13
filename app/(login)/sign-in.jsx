@@ -1,9 +1,9 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomContainer from "@/components/CustomContainer";
 import FormInput from "@/components/FormInput";
 import CustomButton from "@/components/CustomButton";
+
 const SignIn = () => {
   return (
     <CustomContainer otherStyles="bg-[#5CB88F] px-0">
@@ -20,7 +20,16 @@ const SignIn = () => {
         <View className="pb-8 pt-4">
           <Text className="text-[#9b9b9b] text-right">Forgot Password?</Text>
         </View>
-        <CustomButton label="Sign In" />
+
+        <TouchableOpacity
+          className="bg-black py-[18px] rounded-lg"
+          activeOpacity={0.7}
+          onPress={() => Alert.alert('Submitted Value', 'Bruh')}
+        >
+          <Text className="text-white text-base font-bold text-center">
+            Log-in
+          </Text>
+        </TouchableOpacity>
       </View>
     </CustomContainer>
   );
