@@ -9,13 +9,15 @@ const FormInput = ({
   phoneNumber = false,
   onChangeValue,
   value,
-  validation = '',
+  validation = "",
 }) => {
   const [hidePassword, setHidePassword] = useState(true);
   return (
     <View className="mt-6">
       <TextInput
-        className={`text-base p-4 rounded-lg bg-[#F1F4F5] relative ${validation ? 'border border-red-500': ''}`}
+        className={`text-base p-4 rounded-lg bg-[#F1F4F5] relative ${
+          validation ? "border border-red-500" : ""
+        }`}
         placeholder={placeholder}
         onChangeText={(text) => onChangeValue(text)}
         autoCapitalize={email || password ? "none" : "sentences"}
