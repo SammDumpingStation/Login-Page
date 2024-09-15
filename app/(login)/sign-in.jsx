@@ -3,8 +3,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CustomContainer from "@/components/CustomContainer";
 import FormInput from "@/components/FormInput";
 import CustomButton from "@/components/CustomButton";
+import { useState } from "react";
 
 const SignIn = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   return (
     <CustomContainer otherStyles="bg-[#5CB88F] px-0">
       <Text className="mt-2 mb-14 text-[40px] text-white font-black px-4">
@@ -15,8 +18,19 @@ const SignIn = () => {
           <Text className="text-2xl font-black">Welcome Back!</Text>
           <Text className="text-base">Please Log-in your credentials</Text>
         </View>
-        <FormInput placeholder="Username or Email" />
-        <FormInput placeholder="Password" />
+
+        <FormInput
+          placeholder="Username or Email"
+          onChangeValue={(text) => setUsername(text)}
+          value={username}
+        />
+        <FormInput
+          placeholder="Password"
+          password={true}
+          onChangeValue={(text) => setPassword(text)}
+          value={password}
+        />
+
         <View className="pb-8 pt-4">
           <Text className="text-[#9b9b9b] text-right">Forgot Password?</Text>
         </View>
@@ -24,7 +38,14 @@ const SignIn = () => {
         <TouchableOpacity
           className="bg-black py-[18px] rounded-lg"
           activeOpacity={0.7}
-          onPress={() => Alert.alert('Submitted Value', 'Bruh')}
+          onPress={() => {
+            Alert.alert(
+              "Submitted Value",
+              `Password: ${password} Username: ${username}`
+            );
+            setUsername('')
+            setPassword('')
+          }}
         >
           <Text className="text-white text-base font-bold text-center">
             Log-in
