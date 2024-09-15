@@ -122,7 +122,7 @@ const SignIn = () => {
         <CustomButton
           label="Log-in"
           onPress={() => {
-            Keyboard.dismiss;
+            Keyboard.dismiss();
             const username = validationLogic.validate(formData.username, {
               email: true,
             });
@@ -133,9 +133,6 @@ const SignIn = () => {
               setFormValidation((prev) => ({
                 ...prev,
                 username: username,
-              }));
-              setFormValidation((prev) => ({
-                ...prev,
                 password: password,
               }));
               return;
@@ -144,7 +141,13 @@ const SignIn = () => {
             setTimeout(() => {
               setModalVisible(false);
             }, 3500);
-            setFormData((prev) => ({ ...prev, username: "", password: "" }));
+            setFormData({ 
+              username: "", 
+              password: "" });
+            setFormValidation({
+              username: "",
+              password: "",
+            });
           }}
         />
       </KeyboardAvoidingView>
