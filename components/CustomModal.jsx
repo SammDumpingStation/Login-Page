@@ -2,7 +2,7 @@ import { View, Text, Modal, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import icons from "../constants/icons";
 
-const CustomModal = ({ modalVisible, setModalVisible }) => {
+const CustomModal = ({ modalVisible, setModalVisible, label }) => {
   return (
     <Modal visible={modalVisible} transparent animationType="fade">
       <View className="bg-[#9b9b9b]/50 flex-1">
@@ -13,7 +13,7 @@ const CustomModal = ({ modalVisible, setModalVisible }) => {
               className="w-12 h-12"
               resizeMode="contain"
             />
-            <Text className="text-2xl font-black">Login Successful!</Text>
+            <Text className="text-2xl font-black">{label} Successful!</Text>
           </View>
 
           <TouchableOpacity

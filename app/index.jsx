@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import CustomContainer from "@/components/CustomContainer";
 import CustomButton from "@/components/CustomButton";
 
@@ -19,10 +19,16 @@ const index = () => {
           </Text>
         </View>
         <View>
-          <Text className="text-[#9b9b9b] text-[14px] text-center mb-4">Explore, compare and find the perfect car.</Text>
-          <CustomButton label="Get Started" onPress={()=> {
-            router.push('/sign-in')
-          }} />
+          <Text className="text-[#9b9b9b] text-[14px] text-center mb-4">
+            Explore, compare and find the perfect car.
+          </Text>
+          <CustomButton
+            label="Get Started"
+            otherStyles="bg-black"
+            onPress={() => {
+              router.push("/sign-in");
+            }}
+          />
         </View>
       </View>
     </CustomContainer>

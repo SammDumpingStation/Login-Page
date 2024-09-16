@@ -1,49 +1,68 @@
-import { View, TextInput, Image, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
 import icons from "../constants/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import FormValidation from "./FormValidation";
 
 const FormInput = ({
   placeholder,
-  password = false,
-  email = false,
-  phoneNumber = false,
-  onChangeValue,
+  label = "default",
   value,
-  validation = "",
+  validation,
+  onChangeValue,
+  onChangeValidation,
 }) => {
   const [hidePassword, setHidePassword] = useState(true);
+
+  useEffect(() => {
+    value.length === 0 || value.length > 0 ? onChangeValidation("") : "";
+  }, [value]);
+
   return (
     <View className="mt-6">
-      <TextInput
-        cursorColor="#9b9b9b"
-        className={`text-base p-4 rounded-lg bg-[#F1F4F5] relative  caret-white  ${
-          validation ? "border border-red-500" : ""
-        }`}
-        placeholderTextColor="#9b9b9b"
-        placeholder={placeholder}
-        onChangeText={(text) => onChangeValue(text)}
-        autoCapitalize={email || password ? "none" : "sentences"}
-        autoCorrect={false}
-        inputMode={
-          email ? "email-address" : phoneNumber ? "phone-pad" : "default"
-        }
-        secureTextEntry={password ? hidePassword : false}
-        value={value}
-      />
-      {password ? (
-        <TouchableOpacity
-          className="absolute right-0 px-4 items-center h-full justify-center"
-          onPress={() => setHidePassword(!hidePassword)}
-        >
-          <Image
-            className="h-7 w-7"
-            resizeMode="contain"
-            source={hidePassword ? icons.eyeHide : icons.eye}
-          />
-        </TouchableOpacity>
-      ) : (
-        ""
-      )}
+      <View className="relative">
+        <TextInput
+          cursorColor="#9b9b9b"
+          className={`text-base p-4 rounded-lg bg-[#F1F4F5]   ${
+            validation
+              ? "border border-red-500"
+              : value.length === 0
+              ? "border-0"
+              : ""
+          }`}
+          placeholderTextColor="#9b9b9b"
+          placeholder={placeholder}
+          onChangeText={(text) => onChangeValue(text)}
+          autoCapitalize={
+            label === "email" || label === "password" ? "none" : "sentences"
+          }
+          autoCorrect={false}
+          inputMode={
+            label === "email"
+              ? "email-address"
+              : label === "phone-number"
+              ? "phone-pad"
+              : "default"
+          }
+          secureTextEntry={label === "password" ? hidePassword : false}
+          value={value}
+        />
+        {label === "password" ? (
+          <TouchableOpacity
+            className="absolute right-0 px-4 items-center h-full justify-center"
+            onPress={() => setHidePassword(!hidePassword)}
+          >
+            <Image
+              className="h-7 w-7"
+              resizeMode="contain"
+              source={hidePassword ? icons.eyeHide : icons.eye}
+            />
+          </TouchableOpacity>
+        ) : (
+          ""
+        )}
+      </View>
+
+      <FormValidation value={validation} />
     </View>
   );
 };

@@ -13,52 +13,36 @@ import CustomButton from "@/components/CustomButton";
 import CustomModal from "@/components/CustomModal";
 import { router } from "expo-router";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import FormValidation from "@/components/FormValidation";
 import validationLogic from "@/utils/validation-logic";
 import resetInput from "@/utils/reset-input";
+import toast from "@/utils/toast-message";
 
 const SignUp = () => {
   const [isCheck, setIsCheck] = useState(false);
+  const [isMatchedPwd, setIsMatchedPwd] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
-    username: "",
     email: "",
     password: "",
     confirmPwd: "",
   });
   const [formValidation, setFormValidation] = useState({
     name: "",
-    username: "",
     email: "",
     password: "",
+    confirmPwd: "",
   });
+
   useEffect(() => {
-    if (formData.name.length === 0) {
-      setFormValidation((prev) => ({
-        ...prev,
-        name: "",
-      }));
-    }
-    if (formData.username.length === 0) {
-      setFormValidation((prev) => ({
-        ...prev,
-        username: "",
-      }));
-    }
-    if (formData.email.length === 0) {
-      setFormValidation((prev) => ({
-        ...prev,
-        email: "",
-      }));
-    }
-    if (formData.password.length === 0) {
-      setFormValidation((prev) => ({
-        ...prev,
-        password: "",
-      }));
-    }
-  }, [formData.name, formData.email, formData.username, formData.password]);
-  const [modalVisible, setModalVisible] = useState(false);
+    formData.password === formData.confirmPwd
+      ? setIsMatchedPwd(true)
+      : setIsMatchedPwd(false);
+  }, [formData.password, formData.confirmPwd]);
+
+  const setData = (key, value, setState) => {
+    setState((prev) => ({ ...prev, [key]: value }));
+  };
 
   return (
     <CustomContainer scroll={true} otherStyles="bg-[#5CB88F] px-0">
@@ -78,53 +62,46 @@ const SignUp = () => {
       >
         <FormInput
           placeholder="Full Name"
-          onChangeValue={(text) =>
-            setFormData((prev) => ({ ...prev, name: text }))
-          }
           validation={formValidation.name}
           value={formData.name}
-        />
-        <FormValidation value={formValidation.name} />
-        <FormInput
-          placeholder="Username"
-          onChangeValue={(text) =>
-            setFormData((prev) => ({ ...prev, username: text }))
+          onChangeValue={(text) => setData("name", text, setFormData)}
+          onChangeValidation={(text) =>
+            setData("name", text, setFormValidation)
           }
-          validation={formValidation.username}
-          value={formData.username}
         />
-        <FormValidation value={formValidation.username} />
         <FormInput
           placeholder="Email"
-          email={true}
-          onChangeValue={(text) =>
-            setFormData((prev) => ({ ...prev, email: text }))
-          }
+          label="email"
           validation={formValidation.email}
           value={formData.email}
+          onChangeValue={(text) => setData("email", text, setFormData)}
+          onChangeValidation={(text) =>
+            setData("email", text, setFormValidation)
+          }
         />
-        <FormValidation value={formValidation.email} />
         <FormInput
           placeholder="Password"
-          password={true}
-          onChangeValue={(text) =>
-            setFormData((prev) => ({ ...prev, password: text }))
-          }
+          label="password"
           validation={formValidation.password}
           value={formData.password}
+          onChangeValue={(text) => setData("password", text, setFormData)}
+          onChangeValidation={(text) =>
+            setData("password", text, setFormValidation)
+          }
         />
-        <FormValidation value={formValidation.password} />
         <FormInput
           placeholder="Confirm Password"
-          password={true}
-          onChangeValue={(text) =>
-            setFormData((prev) => ({ ...prev, confirmPwd: text }))
-          }
+          label="password"
           value={formData.confirmPwd}
+          validation={formValidation.confirmPwd}
+          onChangeValue={(text) => setData("confirmPwd", text, setFormData)}
+          onChangeValidation={(text) =>
+            setData("confirmPwd", text, setFormValidation)
+          }
         />
 
-        <View className="bg-white flex-1 px-4">
-          <View className="flex-row mb-8 mt-4">
+        <View className="bg-white flex-1">
+          <View className="flex-row mb-8 mt-3 ml-1">
             <BouncyCheckbox
               isChecked={isCheck}
               onPress={() => setIsCheck(!isCheck)}
@@ -135,7 +112,7 @@ const SignUp = () => {
                 borderRadius: 0,
               }}
               size={16}
-              className="-ml-4"
+              className=""
               fillColor={isCheck ? "#5CB88F" : "#9b9b9b"}
             />
             <TouchableOpacity
@@ -156,15 +133,18 @@ const SignUp = () => {
           <CustomModal
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
+            label="Registration"
           />
 
           <CustomButton
             label="Create Account"
-            otherStyles="mb-6"
+            otherStyles={`mb-6 ${!isCheck ? "bg-[#E4E7EB]" : ""}`}
+            textStyle={!isCheck ? "text-[#9b9b9b]" : ""}
+            disabled={!isCheck ? true : false}
             onPress={() => {
+              toast.hide();
               Keyboard.dismiss();
               const name = validationLogic.validate(formData.name);
-              const username = validationLogic.validate(formData.username);
               const email = validationLogic.validate(formData.email, {
                 email: true,
               });
@@ -172,16 +152,25 @@ const SignUp = () => {
                 password: true,
               });
 
-              if (name || username || email || password) {
+              if (name || email || password) {
                 setFormValidation((prev) => ({
                   ...prev,
                   name: name,
-                  username: username,
                   email: email,
                   password: password,
                 }));
-
+                toast.showToast({ success: false });
                 return;
+              }
+              if (!isMatchedPwd) {
+                toast.showToast({
+                  success: false,
+                  customMessage: "Please match your passwords",
+                });
+                return setFormValidation((prev) => ({
+                  ...prev,
+                  confirmPwd: "Please match your passwords",
+                }));
               }
 
               setModalVisible(!modalVisible);
@@ -191,6 +180,7 @@ const SignUp = () => {
               }, 3500);
               setFormData(resetInput("register"));
               setFormValidation(resetInput("register"));
+              toast.showToast({ type: "login" });
             }}
           />
         </View>

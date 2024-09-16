@@ -2,23 +2,21 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Alert,
   KeyboardAvoidingView,
   Platform,
-  Modal,
-  Image,
   Keyboard,
 } from "react-native";
 import CustomContainer from "@/components/CustomContainer";
 import FormInput from "@/components/FormInput";
-import { useEffect, useState } from "react";
-import { Link, router } from "expo-router";
+import { useState } from "react";
+import { router } from "expo-router";
 import icons from "@/constants/icons";
 import validationLogic from "../../utils/validation-logic";
 import CustomButton from "@/components/CustomButton";
-import FormValidation from "@/components/FormValidation";
 import CustomModal from "@/components/CustomModal";
 import resetInput from "@/utils/reset-input";
+import Toast from "react-native-toast-message";
+import toast from "@/utils/toast-message";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -30,22 +28,11 @@ const SignIn = () => {
     password: "",
   });
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const setData = (key, value, setState) => {
+    setState((prev) => ({ ...prev, [key]: value }));
+  };
 
-  useEffect(() => {
-    if (formData.username.length === 0) {
-      setFormValidation((prev) => ({
-        ...prev,
-        username: "",
-      }));
-    }
-    if (formData.password.length === 0) {
-      setFormValidation((prev) => ({
-        ...prev,
-        password: "",
-      }));
-    }
-  }, [formData.username, formData.password]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <CustomContainer scroll={true} otherStyles="bg-[#5CB88F] px-0">
@@ -63,32 +50,33 @@ const SignIn = () => {
           </Text>
         </View>
         <FormInput
-          placeholder="Username or Email"
-          onChangeValue={(text) =>
-            setFormData((prev) => ({ ...prev, username: text }))
-          }
-          email={true}
+          label="email"
+          placeholder="Email"
           validation={formValidation.username}
           value={formData.username}
+          onChangeValue={(text) => setData("username", text, setFormData)}
+          onChangeValidation={(text) =>
+            setData("username", text, setFormValidation)
+          }
         />
-        <FormValidation value={formValidation.username} />
 
         <FormInput
+          label="password"
           placeholder="Password"
-          password={true}
-          onChangeValue={(text) =>
-            setFormData((prev) => ({ ...prev, password: text }))
-          }
           validation={formValidation.password}
           value={formData.password}
+          onChangeValue={(text) => setData("password", text, setFormData)}
+          onChangeValidation={(text) =>
+            setData("password", text, setFormValidation)
+          }
         />
-        <FormValidation value={formValidation.password} />
         <View className="pb-8 pt-4">
           <Text className="text-[#9b9b9b] text-right">Forgot Password?</Text>
         </View>
         <CustomModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
+          label="Log-in"
         />
 
         <CustomButton
@@ -107,6 +95,7 @@ const SignIn = () => {
                 username: username,
                 password: password,
               }));
+              toast.showToast({ success: false });
               return;
             }
             setModalVisible(!modalVisible);
@@ -115,6 +104,7 @@ const SignIn = () => {
             }, 3500);
             setFormData(resetInput("login"));
             setFormValidation(resetInput("login"));
+            toast.showToast({ type: "login" });
           }}
         />
       </KeyboardAvoidingView>
@@ -135,7 +125,10 @@ const SignIn = () => {
           />
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => router.push("/sign-up")}
+            onPress={() => {
+              Toast.hide();
+              router.push("/sign-up");
+            }}
           >
             <Text className="text-center mt-8 text-base text-[#5CB88F] font-bold">
               Create an Account
