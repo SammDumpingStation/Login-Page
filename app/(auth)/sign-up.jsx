@@ -5,16 +5,17 @@ import {
   Platform,
   TouchableOpacity,
   Keyboard,
-  ScrollView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomContainer from "@/components/CustomContainer";
 import FormInput from "@/components/FormInput";
 import CustomButton from "@/components/CustomButton";
+import CustomModal from "@/components/CustomModal";
 import { router } from "expo-router";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import FormValidation from "@/components/FormValidation";
 import validationLogic from "@/utils/validation-logic";
+import resetInput from "@/utils/reset-input";
 
 const SignUp = () => {
   const [isCheck, setIsCheck] = useState(false);
@@ -31,6 +32,33 @@ const SignUp = () => {
     email: "",
     password: "",
   });
+  useEffect(() => {
+    if (formData.name.length === 0) {
+      setFormValidation((prev) => ({
+        ...prev,
+        name: "",
+      }));
+    }
+    if (formData.username.length === 0) {
+      setFormValidation((prev) => ({
+        ...prev,
+        username: "",
+      }));
+    }
+    if (formData.email.length === 0) {
+      setFormValidation((prev) => ({
+        ...prev,
+        email: "",
+      }));
+    }
+    if (formData.password.length === 0) {
+      setFormValidation((prev) => ({
+        ...prev,
+        password: "",
+      }));
+    }
+  }, [formData.name, formData.email, formData.username, formData.password]);
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <CustomContainer scroll={true} otherStyles="bg-[#5CB88F] px-0">
@@ -53,6 +81,8 @@ const SignUp = () => {
           onChangeValue={(text) =>
             setFormData((prev) => ({ ...prev, name: text }))
           }
+          validation={formValidation.name}
+          value={formData.name}
         />
         <FormValidation value={formValidation.name} />
         <FormInput
@@ -60,6 +90,8 @@ const SignUp = () => {
           onChangeValue={(text) =>
             setFormData((prev) => ({ ...prev, username: text }))
           }
+          validation={formValidation.username}
+          value={formData.username}
         />
         <FormValidation value={formValidation.username} />
         <FormInput
@@ -68,6 +100,8 @@ const SignUp = () => {
           onChangeValue={(text) =>
             setFormData((prev) => ({ ...prev, email: text }))
           }
+          validation={formValidation.email}
+          value={formData.email}
         />
         <FormValidation value={formValidation.email} />
         <FormInput
@@ -76,6 +110,8 @@ const SignUp = () => {
           onChangeValue={(text) =>
             setFormData((prev) => ({ ...prev, password: text }))
           }
+          validation={formValidation.password}
+          value={formData.password}
         />
         <FormValidation value={formValidation.password} />
         <FormInput
@@ -84,29 +120,43 @@ const SignUp = () => {
           onChangeValue={(text) =>
             setFormData((prev) => ({ ...prev, confirmPwd: text }))
           }
+          value={formData.confirmPwd}
         />
 
         <View className="bg-white flex-1 px-4">
-          <View className=" flex-row my-8">
+          <View className="flex-row mb-8 mt-4">
             <BouncyCheckbox
               isChecked={isCheck}
+              onPress={() => setIsCheck(!isCheck)}
               innerIconStyle={{
                 borderRadius: 0,
               }}
               iconStyle={{
                 borderRadius: 0,
               }}
-              size={20}
-              fillColor="#5CB88F"
+              size={16}
+              className="-ml-4"
+              fillColor={isCheck ? "#5CB88F" : "#9b9b9b"}
             />
             <TouchableOpacity
-              className="text-[#9b9b9b] h-full "
+              className="text-[#9b9b9b]"
               activeOpacity={0.7}
               onPress={() => setIsCheck(!isCheck)}
             >
-              <Text>Agree to terms & conditions</Text>
+              <Text
+                className={`text-base ${
+                  isCheck ? "text-[#5CB88F]" : "text-[#9b9b9b]"
+                }`}
+              >
+                Agree to terms & conditions
+              </Text>
             </TouchableOpacity>
           </View>
+
+          <CustomModal
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+          />
 
           <CustomButton
             label="Create Account"
@@ -130,22 +180,17 @@ const SignUp = () => {
                   email: email,
                   password: password,
                 }));
+
                 return;
               }
-              setFormData({
-                name: "",
-                username: "",
-                email: "",
-                password: "",
-                confirmPwd: "",
-              });
-              setFormValidation({
-                name: "",
-                username: "",
-                email: "",
-                password: "",
-              });
-              router.push("/sign-in");
+
+              setModalVisible(!modalVisible);
+              setTimeout(() => {
+                setModalVisible(false);
+                router.push("/sign-in");
+              }, 3500);
+              setFormData(resetInput("register"));
+              setFormValidation(resetInput("register"));
             }}
           />
         </View>

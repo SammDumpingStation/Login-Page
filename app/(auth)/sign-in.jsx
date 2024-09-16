@@ -17,6 +17,8 @@ import icons from "@/constants/icons";
 import validationLogic from "../../utils/validation-logic";
 import CustomButton from "@/components/CustomButton";
 import FormValidation from "@/components/FormValidation";
+import CustomModal from "@/components/CustomModal";
+import resetInput from "@/utils/reset-input";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -66,13 +68,7 @@ const SignIn = () => {
             setFormData((prev) => ({ ...prev, username: text }))
           }
           email={true}
-          validation={
-            formData.username === ""
-              ? false
-              : formValidation.username
-              ? true
-              : false
-          }
+          validation={formValidation.username}
           value={formData.username}
         />
         <FormValidation value={formValidation.username} />
@@ -83,41 +79,17 @@ const SignIn = () => {
           onChangeValue={(text) =>
             setFormData((prev) => ({ ...prev, password: text }))
           }
-          validation={
-            formData.password === ""
-              ? false
-              : formValidation.password
-              ? true
-              : false
-          }
+          validation={formValidation.password}
           value={formData.password}
         />
         <FormValidation value={formValidation.password} />
         <View className="pb-8 pt-4">
           <Text className="text-[#9b9b9b] text-right">Forgot Password?</Text>
         </View>
-        <Modal visible={modalVisible} transparent animationType="fade">
-          <View className="bg-[#9b9b9b]/50 flex-1">
-            <View className="bg-white m-auto w-64 h-64 justify-between p-4 pt-8 rounded-xl">
-              <View className="items-center space-y-4">
-                <Image
-                  source={icons.check}
-                  className="w-12 h-12"
-                  resizeMode="contain"
-                />
-                <Text className="text-2xl font-black">Login Successful!</Text>
-              </View>
-
-              <TouchableOpacity
-                activeOpacity={0.7}
-                className="bg-[#5CB88F] py-2 rounded-lg"
-                onPress={() => setModalVisible(!modalVisible)}
-              >
-                <Text className="text-center text-white">Confirm</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+        <CustomModal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
 
         <CustomButton
           label="Log-in"
@@ -141,13 +113,8 @@ const SignIn = () => {
             setTimeout(() => {
               setModalVisible(false);
             }, 3500);
-            setFormData({ 
-              username: "", 
-              password: "" });
-            setFormValidation({
-              username: "",
-              password: "",
-            });
+            setFormData(resetInput("login"));
+            setFormValidation(resetInput("login"));
           }}
         />
       </KeyboardAvoidingView>

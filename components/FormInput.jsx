@@ -15,14 +15,16 @@ const FormInput = ({
   return (
     <View className="mt-6">
       <TextInput
-        className={`text-base p-4 rounded-lg bg-[#F1F4F5] relative ${
+        cursorColor="#9b9b9b"
+        className={`text-base p-4 rounded-lg bg-[#F1F4F5] relative  caret-white  ${
           validation ? "border border-red-500" : ""
         }`}
+        placeholderTextColor="#9b9b9b"
         placeholder={placeholder}
         onChangeText={(text) => onChangeValue(text)}
         autoCapitalize={email || password ? "none" : "sentences"}
         autoCorrect={false}
-        keyboardType={
+        inputMode={
           email ? "email-address" : phoneNumber ? "phone-pad" : "default"
         }
         secureTextEntry={password ? hidePassword : false}
