@@ -21,9 +21,9 @@ import toast from "@/utils/toast-message";
 const SignIn = () => {
   const [formData, setFormData] = useState({
     email: "",
-    emailValidation: "",
+    emailError: "",
     password: "",
-    passwordValidation: "",
+    passwordError: "",
   });
 
   const setData = (key, value) => {
@@ -32,14 +32,14 @@ const SignIn = () => {
 
   const checkInput = (data, type) => {
     const value = validationLogic.validate(data, type);
-    let inputType = "";
+    let errorType = "";
     type === "email"
-      ? (inputType = "emailValidation")
-      : (inputType = "passwordValidation");
+      ? (errorType = "emailError")
+      : (errorType = "passwordError");
     if (value) {
       setFormData((prev) => ({
         ...prev,
-        [inputType]: value,
+        [errorType]: value,
       }));
     }
   };
@@ -63,22 +63,22 @@ const SignIn = () => {
         </View>
         <FormInput
           label="email"
-          onBlur={() => checkInput(formData.email, "email")}
           placeholder="Email"
-          validation={formData.emailValidation}
           value={formData.email}
+          errorMessage={formData.emailError}
+          onBlur={() => checkInput(formData.email, "email")}
           onChangeValue={(text) => setData("email", text)}
-          onChangeValidation={(text) => setData("emailValidation", text)}
+          onError={(text) => setData("emailError", text)}
         />
 
         <FormInput
           label="password"
-          onBlur={() => checkInput(formData.password, "password")}
           placeholder="Password"
-          validation={formData.passwordValidation}
           value={formData.password}
+          errorMessage={formData.passwordError}
+          onBlur={() => checkInput(formData.password, "password")}
           onChangeValue={(text) => setData("password", text)}
-          onChangeValidation={(text) => setData("passwordValidation", text)}
+          onError={(text) => setData("passwordError", text)}
         />
         <View className="pb-8 pt-4">
           <Text className="text-[#9b9b9b] text-right">Forgot Password?</Text>
@@ -94,10 +94,10 @@ const SignIn = () => {
           onPress={() => {
             Keyboard.dismiss();
             checkInput(formData.email, "email");
-            checkInput(formData.email, "password");
+            checkInput(formData.password, "password");
             if (
-              formData.emailValidation ||
-              formData.passwordValidation ||
+              formData.emailError ||
+              formData.passwordError ||
               formData.email.length === 0 ||
               formData.password.length === 0
             ) {

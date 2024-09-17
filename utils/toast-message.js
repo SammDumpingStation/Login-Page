@@ -18,9 +18,8 @@ const showToast = ({ type, success = true, customMessage = "" } = {}) => {
         ? type === "login"
           ? "Successfully Logged-in"
           : "Successfully Registered!"
-        : "Make sure to input correctly",
+        : "Please ensure all fields are filled out correctly. ",
   });
 };
-
 
 export default { showToast, toastConfig };

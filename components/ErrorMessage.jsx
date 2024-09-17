@@ -1,7 +1,7 @@
 import { View, Text } from "react-native";
 import React from "react";
 
-const FormValidation = ({ value }) => {
+const ErrorMessage = ({ value }) => {
   return (
     <>
       {value === "" ? (
@@ -13,4 +13,4 @@ const FormValidation = ({ value }) => {
   );
 };
 
-export default FormValidation;
+export default ErrorMessage;

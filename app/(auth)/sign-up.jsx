@@ -26,13 +26,21 @@ const SignUp = () => {
     email: "",
     password: "",
     confirmPwd: "",
+    nameError: "",
+    emailError: "",
+    passwordError: "",
+    confirmPwdError: "",
   });
-  const [formValidation, setFormValidation] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPwd: "",
-  });
+
+  const checkInput = (data, { type = "default", errorType }) => {
+    const value = validationLogic.validate(data, type);
+    if (value) {
+      setFormData((prev) => ({
+        ...prev,
+        [errorType]: value,
+      }));
+    }
+  };
 
   useEffect(() => {
     formData.password === formData.confirmPwd
@@ -40,8 +48,8 @@ const SignUp = () => {
       : setIsMatchedPwd(false);
   }, [formData.password, formData.confirmPwd]);
 
-  const setData = (key, value, setState) => {
-    setState((prev) => ({ ...prev, [key]: value }));
+  const setData = (key, value) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
   return (
@@ -62,42 +70,59 @@ const SignUp = () => {
       >
         <FormInput
           placeholder="Full Name"
-          validation={formValidation.name}
           value={formData.name}
-          onChangeValue={(text) => setData("name", text, setFormData)}
-          onChangeValidation={(text) =>
-            setData("name", text, setFormValidation)
-          }
+          errorMessage={formData.nameError}
+          onBlur={() => checkInput(formData.name, { errorType: "nameError" })}
+          onChangeValue={(text) => setData("name", text)}
+          onError={(text) => setData("nameError", text)}
         />
         <FormInput
-          placeholder="Email"
           label="email"
-          validation={formValidation.email}
+          placeholder="Email"
           value={formData.email}
-          onChangeValue={(text) => setData("email", text, setFormData)}
-          onChangeValidation={(text) =>
-            setData("email", text, setFormValidation)
+          errorMessage={formData.emailError}
+          onBlur={() =>
+            checkInput(formData.email, {
+              type: "email",
+              errorType: "emailError",
+            })
           }
+          onChangeValue={(text) => setData("email", text)}
+          onError={(text) => setData("emailError", text)}
         />
         <FormInput
+          label="password"
           placeholder="Password"
-          label="password"
-          validation={formValidation.password}
           value={formData.password}
-          onChangeValue={(text) => setData("password", text, setFormData)}
-          onChangeValidation={(text) =>
-            setData("password", text, setFormValidation)
+          errorMessage={formData.passwordError}
+          onBlur={() =>
+            checkInput(formData.password, {
+              type: "password",
+              errorType: "passwordError",
+            })
           }
+          onChangeValue={(text) => setData("password", text)}
+          onError={(text) => setData("passwordError", text)}
         />
+
         <FormInput
-          placeholder="Confirm Password"
           label="password"
+          placeholder="Confirm Password"
           value={formData.confirmPwd}
-          validation={formValidation.confirmPwd}
-          onChangeValue={(text) => setData("confirmPwd", text, setFormData)}
-          onChangeValidation={(text) =>
-            setData("confirmPwd", text, setFormValidation)
-          }
+          errorMessage={formData.confirmPwdError}
+          onBlur={() => {
+            checkInput(formData.confirmPwd, {
+              errorType: "confirmPwdError",
+            });
+            if (!isMatchedPwd) {
+              return setFormData((prev) => ({
+                ...prev,
+                confirmPwdError: "Passwords do not match. Please try again.",
+              }));
+            }
+          }}
+          onChangeValue={(text) => setData("confirmPwd", text)}
+          onError={(text) => setData("confirmPwdError", text)}
         />
 
         <View className="bg-white flex-1">
@@ -143,42 +168,37 @@ const SignUp = () => {
             disabled={!isCheck ? true : false}
             onPress={() => {
               Keyboard.dismiss();
-              const name = validationLogic.validate(formData.name);
-              const email = validationLogic.validate(formData.email, {
-                email: true,
+              checkInput(formData.name, { errorType: "nameError" });
+              checkInput(formData.email, {
+                type: "email",
+                errorType: "emailError",
               });
-              const password = validationLogic.validate(formData.password, {
-                password: true,
+              checkInput(formData.password, {
+                type: "password",
+                errorType: "passwordError",
               });
-
-              if (name || email || password) {
-                setFormValidation((prev) => ({
-                  ...prev,
-                  name: name,
-                  email: email,
-                  password: password,
-                }));
+              checkInput(formData.confirmPwd, {
+              errorType: "confirmPwdError",
+            });
+              if (
+                formData.nameError ||
+                formData.emailError ||
+                formData.passwordError ||
+                formData.confirmPwdError ||
+                formData.name.length === 0 ||
+                formData.email.length === 0 ||
+                formData.password.length === 0 ||
+                formData.confirmPwd.length === 0
+              ) {
                 toast.showToast({ success: false });
                 return;
               }
-              if (!isMatchedPwd) {
-                toast.showToast({
-                  success: false,
-                  customMessage: "Please match your passwords",
-                });
-                return setFormValidation((prev) => ({
-                  ...prev,
-                  confirmPwd: "Please match your passwords",
-                }));
-              }
-
               setModalVisible(!modalVisible);
               setTimeout(() => {
                 setModalVisible(false);
                 router.push("/sign-in");
               }, 3500);
               setFormData(resetInput("register"));
-              setFormValidation(resetInput("register"));
               toast.showToast({ type: "login" });
             }}
           />

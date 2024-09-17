@@ -1,31 +1,31 @@
 import { View, Text, TextInput, Image, TouchableOpacity } from "react-native";
 import icons from "../constants/icons";
 import { useEffect, useState } from "react";
-import FormValidation from "./FormValidation";
+import ErrorMessage from "./ErrorMessage";
 
 const FormInput = ({
-  placeholder,
   label = "default",
-  onBlur,
+  placeholder,
   value,
-  validation,
+  errorMessage,
+  onBlur,
   onChangeValue,
-  onChangeValidation,
+  onError,
 }) => {
   const [hidePassword, setHidePassword] = useState(true);
 
   useEffect(() => {
-    value.length === 0 || value.length > 0 ? onChangeValidation("") : "";
+    value.length === 0 || value.length > 0 ? onError("") : "";
   }, [value]);
 
   return (
     <View className="mt-6">
       <View className="relative">
         <TextInput
-        onBlur={onBlur}
+          onBlur={onBlur}
           cursorColor="#9b9b9b"
           className={`text-base p-4 rounded-lg bg-[#F1F4F5]   ${
-            validation
+            errorMessage
               ? "border border-red-500"
               : value.length === 0
               ? "border-0"
@@ -64,7 +64,7 @@ const FormInput = ({
         )}
       </View>
 
-      <FormValidation value={validation} />
+      <ErrorMessage value={errorMessage} />
     </View>
   );
 };
