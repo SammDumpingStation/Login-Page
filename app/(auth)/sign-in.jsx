@@ -17,6 +17,8 @@ import CustomModal from "@/components/CustomModal";
 import resetInput from "@/utils/reset-input";
 import Toast from "react-native-toast-message";
 import toast from "@/utils/toast-message";
+import CustomLoadingSpinner from "@/components/CustomLoadingSpinner";
+import { signIn } from "@/lib/appwrite";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -25,9 +27,32 @@ const SignIn = () => {
     password: "",
     passwordError: "",
   });
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isSuccessful, setIsSuccessful] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const setData = (key, value) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
+  };
+  const isSuccess = (success) => {
+    if (success) {
+      setIsSuccessful(true);
+      setFormData(resetInput("login"));
+    }
+    setModalVisible(!modalVisible);
+
+    setTimeout(() => {
+      setModalVisible(false);
+      if (success) {
+        toast.showToast({ type: "login" });
+        router.replace("/home");
+      } else {
+        toast.showToast({
+          success: false,
+          customMessage: "Something Went Wrong, Please try again!",
+        });
+      }
+    }, 3500);
   };
 
   const checkInput = (data, type) => {
@@ -44,10 +69,33 @@ const SignIn = () => {
     }
   };
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const handleButton = async () => {
+    Keyboard.dismiss();
+    checkInput(formData.email, "email");
+    checkInput(formData.password, "password");
+    const hasErrors = formData.emailError || formData.passwordError;
+    const isEmpty = !formData.email || !formData.password;
+
+    if (hasErrors || isEmpty) {
+      toast.showToast({ success: false });
+      return;
+    }
+    setIsLoading(true);
+    try {
+      await signIn(formData.email, formData.password);
+      isSuccess(true);
+      //set global state
+    } catch (error) {
+      console.log(error);
+      isSuccess(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <CustomContainer scroll={true} otherStyles="bg-[#5CB88F] px-0">
+      <CustomLoadingSpinner isLoading={isLoading} label="register" />
       <Text className="mt-2 mb-14 text-[40px] text-white font-black px-4">
         Sign In
       </Text>
@@ -86,32 +134,11 @@ const SignIn = () => {
         <CustomModal
           modalVisible={modalVisible}
           setModalVisible={setModalVisible}
+          status={isSuccessful}
           label="Log-in"
         />
 
-        <CustomButton
-          label="Log-in"
-          onPress={() => {
-            Keyboard.dismiss();
-            checkInput(formData.email, "email");
-            checkInput(formData.password, "password");
-            if (
-              formData.emailError ||
-              formData.passwordError ||
-              formData.email.length === 0 ||
-              formData.password.length === 0
-            ) {
-              toast.showToast({ success: false });
-              return;
-            }
-            setModalVisible(!modalVisible);
-            setTimeout(() => {
-              setModalVisible(false);
-            }, 3500);
-            setFormData(resetInput("login"));
-            toast.showToast({ type: "login" });
-          }}
-        />
+        <CustomButton label="Log-in" onPress={handleButton} />
       </KeyboardAvoidingView>
 
       <View className="bg-white px-4 flex-1">

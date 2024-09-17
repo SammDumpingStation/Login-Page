@@ -1,19 +1,22 @@
 import { View, Text, Modal, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import icons from "../constants/icons";
+import Spinner from "react-native-loading-spinner-overlay";
 
-const CustomModal = ({ modalVisible, setModalVisible, label }) => {
+
+const CustomModal = ({ modalVisible, setModalVisible, label, status }) => {
   return (
     <Modal visible={modalVisible} transparent animationType="fade">
-      <View className="bg-[#9b9b9b]/50 flex-1">
+      <View className="bg-[#00000040] flex-1">
         <View className="bg-white m-auto w-64 h-64 justify-between p-4 pt-8 rounded-xl">
           <View className="items-center space-y-4">
             <Image
-              source={icons.check}
+              source={status ? icons.check : icons.error}
               className="w-12 h-12"
               resizeMode="contain"
             />
-            <Text className="text-2xl font-black">{label} Successful!</Text>
+            
+            <Text className="text-2xl font-black">{status ? `${label} Successful!` : 'Something went wrong.'}</Text>
           </View>
 
           <TouchableOpacity

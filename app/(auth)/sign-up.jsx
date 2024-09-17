@@ -16,16 +16,20 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import validationLogic from "@/utils/validation-logic";
 import resetInput from "@/utils/reset-input";
 import toast from "@/utils/toast-message";
+import CustomLoadingSpinner from "@/components/CustomLoadingSpinner";
+import { createUser } from "@/lib/appwrite";
 
 const SignUp = () => {
   const [isCheck, setIsCheck] = useState(false);
   const [isMatchedPwd, setIsMatchedPwd] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccessful, setIsSuccessful] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPwd: "",
+    name: "Sammsaadfwwr",
+    email: "sasaassam@gmail.com",
+    password: "12345677",
+    confirmPwd: "12345677",
     nameError: "",
     emailError: "",
     passwordError: "",
@@ -52,8 +56,76 @@ const SignUp = () => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
+  const isSuccess = (success) => {
+    if (success) {
+      setIsSuccessful(true);
+      setFormData(resetInput("register"));
+    }
+    setModalVisible(!modalVisible);
+
+    setTimeout(() => {
+      setModalVisible(false);
+      if (success) {
+        toast.showToast({ type: "login" });
+        router.replace("/home");
+      } else {
+        toast.showToast({
+          success: false,
+          customMessage: "Something Went Wrong, Please try again!",
+        });
+      }
+    }, 3500);
+  };
+
+  const handleButton = async () => {
+    Keyboard.dismiss();
+    checkInput(formData.name, { errorType: "nameError" });
+    checkInput(formData.email, {
+      type: "email",
+      errorType: "emailError",
+    });
+    checkInput(formData.password, {
+      type: "password",
+      errorType: "passwordError",
+    });
+    checkInput(formData.confirmPwd, {
+      errorType: "confirmPwdError",
+    });
+    const hasErrors =
+      formData.nameError ||
+      formData.emailError ||
+      formData.passwordError ||
+      formData.confirmPwdError;
+    const isEmpty =
+      !formData.name ||
+      !formData.email ||
+      !formData.password ||
+      !formData.confirmPwd;
+
+    if (hasErrors || isEmpty) {
+      toast.showToast({ success: false });
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const result = await createUser(
+        formData.email,
+        formData.password,
+        formData.name
+      );
+      //set global state
+      isSuccess(true);
+    } catch (error) {
+      console.log(error);
+      isSuccess(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <CustomContainer scroll={true} otherStyles="bg-[#5CB88F] px-0">
+      <CustomLoadingSpinner isLoading={isLoading} label="register" />
       <Text className="mt-2 mb-14 text-[40px] text-white font-black px-4">
         Sign Up
       </Text>
@@ -158,49 +230,18 @@ const SignUp = () => {
           <CustomModal
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
+            status={isSuccessful}
             label="Registration"
           />
 
           <CustomButton
             label="Create Account"
-            otherStyles={`mb-6 ${!isCheck ? "bg-[#E4E7EB]" : ""}`}
-            textStyle={!isCheck ? "text-[#9b9b9b]" : ""}
+            otherStyles={`mb-6`}
+            buttonCustomBg={!isCheck}
+            textStyle={!isCheck}
             disabled={!isCheck ? true : false}
-            onPress={() => {
-              Keyboard.dismiss();
-              checkInput(formData.name, { errorType: "nameError" });
-              checkInput(formData.email, {
-                type: "email",
-                errorType: "emailError",
-              });
-              checkInput(formData.password, {
-                type: "password",
-                errorType: "passwordError",
-              });
-              checkInput(formData.confirmPwd, {
-              errorType: "confirmPwdError",
-            });
-              if (
-                formData.nameError ||
-                formData.emailError ||
-                formData.passwordError ||
-                formData.confirmPwdError ||
-                formData.name.length === 0 ||
-                formData.email.length === 0 ||
-                formData.password.length === 0 ||
-                formData.confirmPwd.length === 0
-              ) {
-                toast.showToast({ success: false });
-                return;
-              }
-              setModalVisible(!modalVisible);
-              setTimeout(() => {
-                setModalVisible(false);
-                router.push("/sign-in");
-              }, 3500);
-              setFormData(resetInput("register"));
-              toast.showToast({ type: "login" });
-            }}
+            onPress={handleButton}
+            isLoading={isLoading}
           />
         </View>
       </KeyboardAvoidingView>
