@@ -1,10 +1,16 @@
 import { View, Text, Modal, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import icons from "../constants/icons";
-import Spinner from "react-native-loading-spinner-overlay";
+import { router } from "expo-router";
 
-
-const CustomModal = ({ modalVisible, setModalVisible, label, status }) => {
+const CustomModal = ({
+  modalVisible,
+  setModalVisible,
+  label,
+  status,
+  customMessage = "",
+  customRoute,
+}) => {
   return (
     <Modal visible={modalVisible} transparent animationType="fade">
       <View className="bg-[#00000040] flex-1">
@@ -15,14 +21,21 @@ const CustomModal = ({ modalVisible, setModalVisible, label, status }) => {
               className="w-12 h-12"
               resizeMode="contain"
             />
-            
-            <Text className="text-2xl font-black">{status ? `${label} Successful!` : 'Something went wrong.'}</Text>
+
+            <Text className="text-2xl font-black">
+              {status ? `${label} Successful!` : "Something went wrong."}
+            </Text>
           </View>
 
           <TouchableOpacity
             activeOpacity={0.7}
             className="bg-[#5CB88F] py-2 rounded-lg"
-            onPress={() => setModalVisible(!modalVisible)}
+            onPress={() => {
+              if (customRoute) {
+                router.replace(customRoute);
+              }
+              setModalVisible(!modalVisible);
+            }}
           >
             <Text className="text-center text-white">Confirm</Text>
           </TouchableOpacity>
