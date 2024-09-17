@@ -22,4 +22,5 @@ const showToast = ({ type, success = true, customMessage = "" } = {}) => {
   });
 };
 
+
 export default { showToast, toastConfig };

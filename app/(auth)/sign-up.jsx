@@ -142,7 +142,6 @@ const SignUp = () => {
             textStyle={!isCheck ? "text-[#9b9b9b]" : ""}
             disabled={!isCheck ? true : false}
             onPress={() => {
-              toast.hide();
               Keyboard.dismiss();
               const name = validationLogic.validate(formData.name);
               const email = validationLogic.validate(formData.email, {

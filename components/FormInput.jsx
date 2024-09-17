@@ -6,6 +6,7 @@ import FormValidation from "./FormValidation";
 const FormInput = ({
   placeholder,
   label = "default",
+  onBlur,
   value,
   validation,
   onChangeValue,
@@ -21,6 +22,7 @@ const FormInput = ({
     <View className="mt-6">
       <View className="relative">
         <TextInput
+        onBlur={onBlur}
           cursorColor="#9b9b9b"
           className={`text-base p-4 rounded-lg bg-[#F1F4F5]   ${
             validation

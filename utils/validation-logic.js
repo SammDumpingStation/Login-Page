@@ -1,7 +1,4 @@
-const validate = (
-  value,
-  { email = false, password = false} = {}
-) => {
+const validate = ( value, type = 'default' ) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   // const passwordRegex =
   //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -15,11 +12,11 @@ const validate = (
   if (value.length > 128) {
     return "The input is too long. Please enter fewer than 128 characters.";
   }
-  if (email && !emailRegex.test(value)) {
+  if (type === "email" && !emailRegex.test(value)) {
     return "Please enter a valid email address.";
   }
 
-  if (password && value.length < 8) {
+  if (type === "password" && value.length < 8) {
     return "Password must be at least 8 characters long.";
   }
   // if (password && register && !passwordRegex.test(value)) {

@@ -20,16 +20,28 @@ import toast from "@/utils/toast-message";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
-    username: "",
+    email: "",
+    emailValidation: "",
     password: "",
-  });
-  const [formValidation, setFormValidation] = useState({
-    username: "",
-    password: "",
+    passwordValidation: "",
   });
 
-  const setData = (key, value, setState) => {
-    setState((prev) => ({ ...prev, [key]: value }));
+  const setData = (key, value) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const checkInput = (data, type) => {
+    const value = validationLogic.validate(data, type);
+    let inputType = "";
+    type === "email"
+      ? (inputType = "emailValidation")
+      : (inputType = "passwordValidation");
+    if (value) {
+      setFormData((prev) => ({
+        ...prev,
+        [inputType]: value,
+      }));
+    }
   };
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -51,24 +63,22 @@ const SignIn = () => {
         </View>
         <FormInput
           label="email"
+          onBlur={() => checkInput(formData.email, "email")}
           placeholder="Email"
-          validation={formValidation.username}
-          value={formData.username}
-          onChangeValue={(text) => setData("username", text, setFormData)}
-          onChangeValidation={(text) =>
-            setData("username", text, setFormValidation)
-          }
+          validation={formData.emailValidation}
+          value={formData.email}
+          onChangeValue={(text) => setData("email", text)}
+          onChangeValidation={(text) => setData("emailValidation", text)}
         />
 
         <FormInput
           label="password"
+          onBlur={() => checkInput(formData.password, "password")}
           placeholder="Password"
-          validation={formValidation.password}
+          validation={formData.passwordValidation}
           value={formData.password}
-          onChangeValue={(text) => setData("password", text, setFormData)}
-          onChangeValidation={(text) =>
-            setData("password", text, setFormValidation)
-          }
+          onChangeValue={(text) => setData("password", text)}
+          onChangeValidation={(text) => setData("passwordValidation", text)}
         />
         <View className="pb-8 pt-4">
           <Text className="text-[#9b9b9b] text-right">Forgot Password?</Text>
@@ -83,18 +93,14 @@ const SignIn = () => {
           label="Log-in"
           onPress={() => {
             Keyboard.dismiss();
-            const username = validationLogic.validate(formData.username, {
-              email: true,
-            });
-            const password = validationLogic.validate(formData.password, {
-              password: true,
-            });
-            if (username || password) {
-              setFormValidation((prev) => ({
-                ...prev,
-                username: username,
-                password: password,
-              }));
+            checkInput(formData.email, "email");
+            checkInput(formData.email, "password");
+            if (
+              formData.emailValidation ||
+              formData.passwordValidation ||
+              formData.email.length === 0 ||
+              formData.password.length === 0
+            ) {
               toast.showToast({ success: false });
               return;
             }
@@ -103,7 +109,6 @@ const SignIn = () => {
               setModalVisible(false);
             }, 3500);
             setFormData(resetInput("login"));
-            setFormValidation(resetInput("login"));
             toast.showToast({ type: "login" });
           }}
         />
