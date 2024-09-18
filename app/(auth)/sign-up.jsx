@@ -26,10 +26,10 @@ const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [formData, setFormData] = useState({
-    name: "Sammsaadfwwr",
-    email: "sasaassam@gmail.com",
-    password: "12345677",
-    confirmPwd: "12345677",
+    name: "",
+    email: "",
+    password: "",
+    confirmPwd: "",
     nameError: "",
     emailError: "",
     passwordError: "",
