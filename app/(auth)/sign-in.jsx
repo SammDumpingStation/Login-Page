@@ -136,6 +136,7 @@ const SignIn = () => {
           setModalVisible={setModalVisible}
           status={isSuccessful}
           label="Log-in"
+          customRoute={'/home'}
         />
 
         <CustomButton label="Log-in" onPress={handleButton} />
