@@ -6,8 +6,11 @@ import { router } from "expo-router";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
 import { TouchableOpacity } from "react-native";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 const Home = () => {
+  const { user } = useGlobalContext();
+  
   return (
     <CustomContainer>
       <View className="flex-row items-center justify-between">
@@ -44,6 +47,7 @@ const Home = () => {
           resizeMode="contain"
         />
       </View>
+      <Text>{user.username}</Text>
     </CustomContainer>
   );
 };
