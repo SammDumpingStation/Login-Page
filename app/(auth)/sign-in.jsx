@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Keyboard,
+  AppState,
 } from "react-native";
 import CustomContainer from "@/components/CustomContainer";
 import FormInput from "@/components/FormInput";
@@ -18,7 +19,15 @@ import resetInput from "@/utils/reset-input";
 import Toast from "react-native-toast-message";
 import toast from "@/utils/toast-message";
 import CustomLoadingSpinner from "@/components/CustomLoadingSpinner";
-import { signIn } from "@/lib/appwrite";
+import { supabase } from "../../lib/supabase";
+
+// AppState.addEventListener("change", (state) => {
+//   if (state === "active") {
+//     supabase.auth.startAutoRefresh();
+//   } else {
+//     supabase.auth.stopAutoRefresh();
+//   }
+// });
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -69,7 +78,7 @@ const SignIn = () => {
     }
   };
 
-  const handleButton = async () => {
+  const signInWithEmail = async () => {
     Keyboard.dismiss();
     checkInput(formData.email, "email");
     checkInput(formData.password, "password");
@@ -82,12 +91,18 @@ const SignIn = () => {
     }
     setIsLoading(true);
     try {
-      await signIn(formData.email, formData.password);
+      await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
       isSuccess(true);
       //set global state
     } catch (error) {
       console.log(error);
-      isSuccess(false);
+      setData(
+        "emailError",
+        "Email or Password is incorrect, Please Try Again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -136,10 +151,10 @@ const SignIn = () => {
           setModalVisible={setModalVisible}
           status={isSuccessful}
           label="Log-in"
-          customRoute={'/home'}
+          customRoute={"/home"}
         />
 
-        <CustomButton label="Log-in" onPress={handleButton} />
+        <CustomButton label="Log-in" onPress={signInWithEmail} />
       </KeyboardAvoidingView>
 
       <View className="bg-white px-4 flex-1">

@@ -5,6 +5,7 @@ import {
   Platform,
   TouchableOpacity,
   Keyboard,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomContainer from "@/components/CustomContainer";
@@ -17,7 +18,7 @@ import validationLogic from "@/utils/validation-logic";
 import resetInput from "@/utils/reset-input";
 import toast from "@/utils/toast-message";
 import CustomLoadingSpinner from "@/components/CustomLoadingSpinner";
-import { createUser } from "@/lib/appwrite";
+import { supabase, signUpWithEmail } from "../../lib/supabase";
 
 const SignUp = () => {
   const [isCheck, setIsCheck] = useState(false);
@@ -77,7 +78,7 @@ const SignUp = () => {
     }, 3500);
   };
 
-  const handleButton = async () => {
+  const signUpUser = async () => {
     Keyboard.dismiss();
     checkInput(formData.name, { errorType: "nameError" });
     checkInput(formData.email, {
@@ -108,11 +109,11 @@ const SignUp = () => {
     }
     setIsLoading(true);
     try {
-      const result = await createUser(
-        formData.email,
-        formData.password,
-        formData.name
-      );
+      await supabase.auth.signUp({
+        email: email,
+        password: password,
+        email_confirm: true,
+      });
       //set global state
       isSuccess(true);
     } catch (error) {
@@ -240,7 +241,7 @@ const SignUp = () => {
             buttonCustomBg={!isCheck}
             textStyle={!isCheck}
             disabled={!isCheck ? true : false}
-            onPress={handleButton}
+            onPress={signUpUser}
             isLoading={isLoading}
           />
         </View>
