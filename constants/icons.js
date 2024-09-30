@@ -10,6 +10,7 @@ import home from "../assets/icons/home.png";
 import search from "../assets/icons/search.png";
 import profile from "../assets/icons/profile.png";
 import location from '../assets/icons/location.png'
+import logo from '../assets/icons/logo.png'
 
 export default {
   eyeHide,
@@ -24,4 +25,5 @@ export default {
   search,
   profile,
   location,
+  logo
 };
