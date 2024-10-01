@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import CustomContainer from "@/components/CustomContainer";
 import FormInput from "@/components/FormInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import icons from "@/constants/icons";
 import validationLogic from "../../utils/validation-logic";
@@ -22,7 +22,7 @@ import { signInUser } from "@/lib/supabase";
 import { useUserContext } from "../../context/UserContext";
 
 const SignIn = () => {
-  const { setAuthId } = useUserContext();
+  const { authId, setAuthId } = useUserContext();
   const [formData, setFormData] = useState({
     email: "",
     emailError: "",
@@ -33,6 +33,19 @@ const SignIn = () => {
   const [isSuccessful, setIsSuccessful] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (modalVisible) {
+        setModalVisible(false);
+        router.replace("/home");
+      }
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [modalVisible]);
+
   const setData = (key, value) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
@@ -40,21 +53,13 @@ const SignIn = () => {
     if (success) {
       setIsSuccessful(true);
       setFormData(resetInput("login"));
+    } else {
+      toast.showToast({
+        success: false,
+        customMessage: "Something Went Wrong, Please try again!",
+      });
     }
     setModalVisible(!modalVisible);
-
-    setTimeout(() => {
-      setModalVisible(false);
-      if (success) {
-        toast.showToast({ type: "login" });
-        router.replace("/home");
-      } else {
-        toast.showToast({
-          success: false,
-          customMessage: "Something Went Wrong, Please try again!",
-        });
-      }
-    }, 3000);
   };
 
   const checkInput = (data, type) => {
@@ -90,7 +95,9 @@ const SignIn = () => {
       if (session && session.user) {
         const authUserId = session.user.id; // Get the Auth ID from the session
         setAuthId(authUserId); // Set the Auth ID in the context
-        isSuccess(true);
+        if (authId && authId != null) {
+          isSuccess(true);
+        }
       } else {
         // Handle the case where sign-in was successful but no user data is returned
         console.error("No user data returned after sign-in");
@@ -108,7 +115,19 @@ const SignIn = () => {
   };
 
   return (
-    <CustomContainer scroll={true} otherStyles="bg-[#5CB88F]" pb={false} ph={false}>
+    <CustomContainer
+      scroll={true}
+      otherStyles="bg-[#5CB88F]"
+      pb={false}
+      ph={false}
+    >
+      <CustomModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        status={isSuccessful}
+        title="Log-in Successfully!"
+        customRoute={"/home"}
+      />
       <CustomLoadingSpinner isLoading={isLoading} label="register" />
       <Text className="mt-2 px-4 mb-14 text-[40px] text-white font-black">
         Sign In
@@ -145,13 +164,6 @@ const SignIn = () => {
         <View className="pb-8 pt-4">
           <Text className="text-[#9b9b9b] text-right">Forgot Password?</Text>
         </View>
-        <CustomModal
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          status={isSuccessful}
-          label="Log-in"
-          customRoute={"/home"}
-        />
 
         <CustomButton label="Log-in" onPress={signInWithEmail} />
       </KeyboardAvoidingView>

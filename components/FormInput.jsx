@@ -6,7 +6,7 @@ import ErrorMessage from "./ErrorMessage";
 const FormInput = ({
   label = "default",
   placeholder,
-  value,
+  value = 0,
   errorMessage,
   onBlur,
   onChangeValue,
@@ -64,7 +64,7 @@ const FormInput = ({
         )}
       </View>
 
-      <ErrorMessage value={errorMessage} />
+      {errorMessage ? <ErrorMessage value={errorMessage} /> : null}
     </View>
   );
 };

@@ -22,7 +22,7 @@ const SettingsCard = ({
         borderTop ? "border-y" : "border-b"
       } ${customStyles}`}
     >
-      <View className={`bg-[${iconBg}] h-10 w-10 rounded-full`}>
+      <View className={`${iconBg} h-10 w-10 rounded-full`}>
         <Image
           source={icon}
           tintColor={iconTint}

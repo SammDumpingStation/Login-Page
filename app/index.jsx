@@ -50,8 +50,8 @@ const index = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         customRoute={"/home"}
+        title="Log-in Successfully"
         status={true}
-        customMessage="Log-in Successfully"
       />
       <View className=" h-full justify-center items-center flex-row gap-2">
         <Image

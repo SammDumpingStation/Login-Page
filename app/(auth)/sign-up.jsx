@@ -44,6 +44,19 @@ const SignUp = () => {
       : setIsMatchedPwd(false);
   }, [formData.password, formData.confirmPwd]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (modalVisible) {
+        setModalVisible(false);
+        router.replace("/home");
+      }
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [modalVisible]);
+
   //since we are setting data constantly (more often in the validation part), we have simplified the process and this expects a value of key (ex. email) and value (ex. the input value text)
   const setData = (key, value) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
@@ -65,21 +78,13 @@ const SignUp = () => {
     if (success) {
       setIsSuccessful(true);
       setFormData(resetInput("register"));
+    } else {
+      toast.showToast({
+        success: false,
+        customMessage: "Something Went Wrong, Please try again!",
+      });
     }
     setModalVisible(!modalVisible);
-
-    setTimeout(() => {
-      setModalVisible(false);
-      if (success) {
-        toast.showToast({ type: "login" });
-        router.replace("/home");
-      } else {
-        toast.showToast({
-          success: false,
-          customMessage: "Something Went Wrong, Please try again!",
-        });
-      }
-    }, 3500);
   };
 
   //this is the overall logic of the sign in user
