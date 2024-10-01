@@ -14,6 +14,8 @@ import location from '../assets/icons/location.png'
 import logo from '../assets/icons/logo.png'
 import cart from '../assets/icons/cart.png'
 import edit from '../assets/icons/edit.png'
+import darkMode from "../assets/icons/darkMode.png";
+import user from "../assets/icons/user.png";
 
 export default {
   arrow,
@@ -31,5 +33,7 @@ export default {
   location,
   logo,
   cart,
-  edit
+  edit,
+  user,
+  darkMode
 };

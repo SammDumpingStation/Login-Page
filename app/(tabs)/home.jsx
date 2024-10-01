@@ -1,18 +1,15 @@
 import { View, Text, Image } from "react-native";
-import React, { useEffect, useState } from "react";
 import CustomContainer from "../../components/CustomContainer";
 import { router } from "expo-router";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
 import { TouchableOpacity } from "react-native";
 import { logOut } from "../../lib/supabase";
-import { useUserContext } from "../../context/UserContext";
 
 const Home = () => {
-  const { user } = useUserContext();
 
   return (
-    <CustomContainer>
+    <CustomContainer scroll={true}>
       <View className="flex-row items-center justify-between">
         <View className="flex-row gap-4">
           <Image
@@ -47,7 +44,6 @@ const Home = () => {
           resizeMode="contain"
         />
       </View>
-      <Text>{user.name}</Text>
     </CustomContainer>
   );
 };

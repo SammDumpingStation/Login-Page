@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { Animated, View, Text, Image } from "react-native";
 import React from "react";
 import { Tabs } from "expo-router";
 import icons from "../../constants/icons";
@@ -39,10 +39,12 @@ const TabsLayout = () => {
           tabBarActiveTintColor: "#5CB88F",
           tabBarInactiveTintColor: "#9B9B9B",
           tabBarStyle: {
+            position: "absolute",
             backgroundColor: "#fff",
+            borderColor: "#fff",
             height: 60,
-            width: 320,
-            marginHorizontal: "auto",
+            width: "92%",
+            marginHorizontal: "4%",
             marginBottom: 12,
             borderRadius: 8,
             shadowColor: "transparent", // iOS: Remove shadow color
