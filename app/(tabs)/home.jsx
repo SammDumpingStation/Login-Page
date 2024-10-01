@@ -1,10 +1,7 @@
 import { View, Text, Image } from "react-native";
 import CustomContainer from "../../components/CustomContainer";
-import { router } from "expo-router";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
-import { TouchableOpacity } from "react-native";
-import { logOut } from "../../lib/supabase";
 
 const Home = () => {
 
@@ -24,17 +21,6 @@ const Home = () => {
             <Text className="text-[14px]">Location not set</Text>
           </View>
         </View>
-
-        <TouchableOpacity
-          className="border px-4 py-2 border-[#9b9b9b] rounded-lg "
-          activeOpacity={0.7}
-          onPress={async () => {
-            await logOut();
-            router.replace("/sign-in");
-          }}
-        >
-          <Text className="">Log-out</Text>
-        </TouchableOpacity>
       </View>
 
       <View className="w-full h-[135px] rounded-xl mt-6">

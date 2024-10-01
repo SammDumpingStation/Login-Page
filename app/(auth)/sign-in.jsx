@@ -108,9 +108,9 @@ const SignIn = () => {
   };
 
   return (
-    <CustomContainer scroll={true} otherStyles="bg-[#5CB88F] px-0">
+    <CustomContainer scroll={true} otherStyles="bg-[#5CB88F]" pb={false} ph={false}>
       <CustomLoadingSpinner isLoading={isLoading} label="register" />
-      <Text className="mt-2 mb-14 text-[40px] text-white font-black px-4">
+      <Text className="mt-2 px-4 mb-14 text-[40px] text-white font-black">
         Sign In
       </Text>
       <KeyboardAvoidingView

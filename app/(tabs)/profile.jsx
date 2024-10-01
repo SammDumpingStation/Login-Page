@@ -4,6 +4,9 @@ import { useUserContext } from "../../context/UserContext";
 import CustomContainer from "../../components/CustomContainer";
 import BackButtonHeader from "../../components/BackButtonHeader";
 import icons from "../../constants/icons";
+import SettingsCard from "../../components/Profile/SettingsCard";
+import DarkModeCard from "../../components/Profile/DarkModeCard";
+import LogOutCard from "../../components/Profile/LogOutCard";
 
 const Profile = () => {
   const { user } = useUserContext();
@@ -16,10 +19,10 @@ const Profile = () => {
           <Image className=" h-4 w-4" tintColor="#9b9b9b" source={icons.edit} />
           <Text className="text-[#9b9b9b]">Edit</Text>
         </View>
-        <View className="h-16 w-16 bg-[#f7f7f7] mb-2 rounded-full">
+        <View className="h-20 w-20 bg-[#f7f7f7] mb-2 rounded-full">
           <Image
             source={icons.user}
-            className="h-10 w-10 m-auto"
+            className="h-12 w-12 m-auto"
             tintColor="#9b9b9b"
             resizeMode="contain"
           />
@@ -32,36 +35,36 @@ const Profile = () => {
         </Text>
       </View>
 
-      <View className="w-full h-[500px] bg-white mt-6 rounded-lg p-4">
-        <View className="flex-row  items-center space-x-4 pb-3">
-          <View className="bg-[#B8B8B8] h-12 w-12 rounded-full">
-            <Image
-              source={icons.darkMode}
-              className="h-6 w-6 m-auto"
-              resizeMode="contain"
-            />
-          </View>
-          <Text className="text-lg">Dark Mode</Text>
-        </View>
-
-        <View className="flex-row border-y border-[#E8E8E8] items-center space-x-4 py-3">
-          <View className="bg-[#EAEBFF] h-12 w-12 rounded-full">
-            <Image
-              source={icons.user}
-              tintColor="#304FFF"
-              className="h-6 w-6 m-auto"
-              resizeMode="contain"
-            />
-          </View>
-          <View className="flex-row items-center justify-between flex-1">
-            <Text className="text-lg">Personal Info</Text>
-            <Image
-              source={icons.arrow}
-              className="h-6 w-6 scale-x-[-1]"
-              resizeMode="contain"
-            />
-          </View>
-        </View>
+      <View className="w-full bg-white mt-6 rounded-lg p-4">
+        <DarkModeCard />
+        <SettingsCard
+          label="Personal Info"
+          icon={icons.user}
+          iconBg="#EAEBFF"
+          iconTint="#304FFF"
+        />
+        <SettingsCard
+          label="Become A Seller"
+          icon={icons.seller}
+          iconBg="#FFF9C5"
+          iconTint="#F57E16"
+        />
+        <SettingsCard
+          label="Change Password"
+          icon={icons.changepwd}
+          iconBg="#EAEBFF"
+          iconTint="#304FFF"
+        />
+      </View>
+      <View className="w-full bg-white mt-6 rounded-lg p-4">
+        <SettingsCard
+          label="Delete Account"
+          icon={icons.deleteIcon}
+          iconBg="#FFEBED"
+          iconTint="#F34336"
+          borderTop={false}
+        />
+        <LogOutCard />
       </View>
     </CustomContainer>
   );

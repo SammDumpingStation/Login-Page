@@ -16,6 +16,10 @@ import cart from '../assets/icons/cart.png'
 import edit from '../assets/icons/edit.png'
 import darkMode from "../assets/icons/darkMode.png";
 import user from "../assets/icons/user.png";
+import changepwd from '../assets/icons/changepwd.png';
+import deleteIcon from "../assets/icons/delete.png";
+import logout from "../assets/icons/logout.png";
+import seller from "../assets/icons/seller.png";
 
 export default {
   arrow,
@@ -35,5 +39,9 @@ export default {
   cart,
   edit,
   user,
-  darkMode
+  darkMode,
+  changepwd,
+  deleteIcon,
+  logout,
+  seller
 };
