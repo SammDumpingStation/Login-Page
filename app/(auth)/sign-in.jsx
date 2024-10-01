@@ -5,7 +5,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Keyboard,
-  AppState,
 } from "react-native";
 import CustomContainer from "@/components/CustomContainer";
 import FormInput from "@/components/FormInput";
@@ -16,20 +15,14 @@ import validationLogic from "../../utils/validation-logic";
 import CustomButton from "@/components/CustomButton";
 import CustomModal from "@/components/CustomModal";
 import resetInput from "@/utils/reset-input";
-import Toast from "react-native-toast-message";
 import toast from "@/utils/toast-message";
 import CustomLoadingSpinner from "@/components/CustomLoadingSpinner";
-import { supabase } from "../../lib/supabase";
-
-// AppState.addEventListener("change", (state) => {
-//   if (state === "active") {
-//     supabase.auth.startAutoRefresh();
-//   } else {
-//     supabase.auth.stopAutoRefresh();
-//   }
-// });
+import Toast from "react-native-toast-message";
+import { signInUser } from "@/lib/supabase";
+import { useUserContext } from "../../context/UserContext";
 
 const SignIn = () => {
+  const { setAuthId } = useUserContext();
   const [formData, setFormData] = useState({
     email: "",
     emailError: "",
@@ -61,7 +54,7 @@ const SignIn = () => {
           customMessage: "Something Went Wrong, Please try again!",
         });
       }
-    }, 3500);
+    }, 3000);
   };
 
   const checkInput = (data, type) => {
@@ -89,14 +82,20 @@ const SignIn = () => {
       toast.showToast({ success: false });
       return;
     }
-    setIsLoading(true);
     try {
-      await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password,
-      });
-      isSuccess(true);
-      //set global state
+      setIsLoading(true);
+      const session = await signInUser(formData.email, formData.password);
+
+      //set the context we made
+      if (session && session.user) {
+        const authUserId = session.user.id; // Get the Auth ID from the session
+        setAuthId(authUserId); // Set the Auth ID in the context
+        isSuccess(true);
+      } else {
+        // Handle the case where sign-in was successful but no user data is returned
+        console.error("No user data returned after sign-in");
+        isSuccess(false);
+      }
     } catch (error) {
       console.log(error);
       setData(

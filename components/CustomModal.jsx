@@ -22,8 +22,12 @@ const CustomModal = ({
               resizeMode="contain"
             />
 
-            <Text className="text-2xl font-black">
-              {status ? `${label} Successful!` : "Something went wrong."}
+            <Text className="text-2xl font-black text-center">
+              {customMessage
+                ? customMessage
+                : status
+                ? `${label} \n Successful!`
+                : "Something went wrong."}
             </Text>
           </View>
 

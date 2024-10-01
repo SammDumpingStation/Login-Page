@@ -1,13 +1,16 @@
 import { View, Text, Image } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CustomContainer from "../../components/CustomContainer";
 import { router } from "expo-router";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
 import { TouchableOpacity } from "react-native";
-import { supabase } from "../../lib/supabase";
+import { logOut } from "../../lib/supabase";
+import { useUserContext } from "../../context/UserContext";
 
 const Home = () => {
+  const { user } = useUserContext();
+
   return (
     <CustomContainer>
       <View className="flex-row items-center justify-between">
@@ -29,7 +32,7 @@ const Home = () => {
           className="border px-4 py-2 border-[#9b9b9b] rounded-lg "
           activeOpacity={0.7}
           onPress={async () => {
-            await supabase.auth.signOut();
+            await logOut();
             router.replace("/sign-in");
           }}
         >
@@ -44,6 +47,7 @@ const Home = () => {
           resizeMode="contain"
         />
       </View>
+      <Text>{user.name}</Text>
     </CustomContainer>
   );
 };

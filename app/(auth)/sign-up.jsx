@@ -4,8 +4,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  Keyboard,
-  Alert,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import CustomContainer from "@/components/CustomContainer";
@@ -18,9 +16,11 @@ import validationLogic from "@/utils/validation-logic";
 import resetInput from "@/utils/reset-input";
 import toast from "@/utils/toast-message";
 import CustomLoadingSpinner from "@/components/CustomLoadingSpinner";
-import { supabase, signUpWithEmail } from "../../lib/supabase";
+import { createUser } from "../../lib/supabase";
+import { useUserContext } from "../../context/UserContext";
 
 const SignUp = () => {
+  const { setAuthId } = useUserContext();
   const [isCheck, setIsCheck] = useState(false);
   const [isMatchedPwd, setIsMatchedPwd] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -37,6 +37,19 @@ const SignUp = () => {
     confirmPwdError: "",
   });
 
+  //constantly checks the password and confirm password if they matched each other if not, it will display an error message
+  useEffect(() => {
+    formData.password === formData.confirmPwd
+      ? setIsMatchedPwd(true)
+      : setIsMatchedPwd(false);
+  }, [formData.password, formData.confirmPwd]);
+
+  //since we are setting data constantly (more often in the validation part), we have simplified the process and this expects a value of key (ex. email) and value (ex. the input value text)
+  const setData = (key, value) => {
+    setFormData((prev) => ({ ...prev, [key]: value }));
+  };
+
+  //Checks the input of our form if it qualifies the simple validation we made located in "@/utils/validation-logic" and then updates the validation text depending on what is returned from the validation-logic file
   const checkInput = (data, { type = "default", errorType }) => {
     const value = validationLogic.validate(data, type);
     if (value) {
@@ -47,16 +60,7 @@ const SignUp = () => {
     }
   };
 
-  useEffect(() => {
-    formData.password === formData.confirmPwd
-      ? setIsMatchedPwd(true)
-      : setIsMatchedPwd(false);
-  }, [formData.password, formData.confirmPwd]);
-
-  const setData = (key, value) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
-  };
-
+  //this function runs if all the things are successful or not and it will show us a green modal if successful, a red modal if not and a toast too
   const isSuccess = (success) => {
     if (success) {
       setIsSuccessful(true);
@@ -78,8 +82,9 @@ const SignUp = () => {
     }, 3500);
   };
 
+  //this is the overall logic of the sign in user
   const signUpUser = async () => {
-    Keyboard.dismiss();
+    //check input if the said input passes our basic validation
     checkInput(formData.name, { errorType: "nameError" });
     checkInput(formData.email, {
       type: "email",
@@ -92,11 +97,13 @@ const SignUp = () => {
     checkInput(formData.confirmPwd, {
       errorType: "confirmPwdError",
     });
+    //checks if there is errors in our input (the red text in our app) if there is, then it will prompt that we have to double check
     const hasErrors =
       formData.nameError ||
       formData.emailError ||
       formData.passwordError ||
       formData.confirmPwdError;
+    // this if statement checks if any of our input fields are empty, if they are, this will return true and will show a toast and an error message
     const isEmpty =
       !formData.name ||
       !formData.email ||
@@ -107,15 +114,24 @@ const SignUp = () => {
       toast.showToast({ success: false });
       return;
     }
-    setIsLoading(true);
+    //if there is no error, it will proceed to signing in the user
     try {
-      await supabase.auth.signUp({
-        email: email,
-        password: password,
-        email_confirm: true,
-      });
+      setIsLoading(true);
+      const session = await createUser(
+        formData.email,
+        formData.password,
+        formData.name
+      );
       //set global state
-      isSuccess(true);
+      if (session && session.user) {
+        const authUserId = session.user.id; // Get the Auth ID from the session
+        setAuthId(authUserId); // Set the Auth ID in the context
+        isSuccess(true);
+      } else {
+        // Handle the case where sign-in was successful but no user data is returned
+        console.error("No user data returned after sign-in");
+        isSuccess(false);
+      }
     } catch (error) {
       console.log(error);
       isSuccess(false);
