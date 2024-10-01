@@ -1,3 +1,4 @@
+import arrow from '../assets/icons/arrow.png'
 import eyeHide from "../assets/icons/eye-hide.png";
 import eye from "../assets/icons/eye.png";
 import check from "../assets/icons/check.png"
@@ -12,8 +13,10 @@ import profile from "../assets/icons/profile.png";
 import location from '../assets/icons/location.png'
 import logo from '../assets/icons/logo.png'
 import cart from '../assets/icons/cart.png'
+import edit from '../assets/icons/edit.png'
 
 export default {
+  arrow,
   eyeHide,
   eye,
   check,
@@ -27,5 +30,6 @@ export default {
   profile,
   location,
   logo,
-  cart
+  cart,
+  edit
 };
