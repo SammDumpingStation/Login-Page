@@ -25,14 +25,19 @@ const index = () => {
         setAuthId(userId); // Set authId here
         if (user != null && !isLoading) {
           setModalVisible(true);
+          const timer = setTimeout(() => {
+            setModalVisible(false);
+            router.replace("/home");
+          }, 3000);
+          return () => clearTimeout(timer);
         }
-      } else {        
+      } else {
         if (data.session === null && !isLoading) {
           router.replace("/sign-in");
         }
       }
     };
-      checkUserSession();
+    checkUserSession();
   }, [user, isLoading, modalVisible]);
 
   return (
