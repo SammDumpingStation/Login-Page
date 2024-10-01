@@ -16,12 +16,15 @@ const Profile = () => {
           <Image className=" h-4 w-4" tintColor="#9b9b9b" source={icons.edit} />
           <Text className="text-[#9b9b9b]">Edit</Text>
         </View>
-        <Image
-          source={icons.profile}
-          className="h-16 w-16 mb-2"
-          tintColor="#9b9b9b"
-          resizeMode="contain"
-        />
+        <View className="h-16 w-16 bg-[#f7f7f7] mb-2 rounded-full">
+          <Image
+            source={icons.user}
+            className="h-10 w-10 m-auto"
+            tintColor="#9b9b9b"
+            resizeMode="contain"
+          />
+        </View>
+
         <Text className="text-lg mb-1">{user.name}</Text>
         <Text className="text-[#9b9b9b] text-xs">{user.email}</Text>
         <Text className="text-[#9b9b9b] text-xs">
