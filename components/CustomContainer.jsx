@@ -5,7 +5,7 @@ import { StatusBar } from "expo-status-bar";
 
 const CustomContainer = ({ children, scroll = null, otherStyles = null }) => {
   return (
-    <SafeAreaView className={`bg-white px-[14px] pt-6  flex-1 h-full ${otherStyles}`}>
+    <SafeAreaView className={`bg-[#f7f7f7] px-[14px] pt-6  flex-1 h-full ${otherStyles}`}>
       <StatusBar style="dark" />
       {scroll ? (
         <ScrollView contentContainerStyle={{ minHeight: "100%" }}>

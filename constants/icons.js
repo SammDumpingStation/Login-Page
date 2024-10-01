@@ -11,6 +11,7 @@ import search from "../assets/icons/search.png";
 import profile from "../assets/icons/profile.png";
 import location from '../assets/icons/location.png'
 import logo from '../assets/icons/logo.png'
+import cart from '../assets/icons/cart.png'
 
 export default {
   eyeHide,
@@ -25,5 +26,6 @@ export default {
   search,
   profile,
   location,
-  logo
+  logo,
+  cart
 };
