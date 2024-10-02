@@ -152,6 +152,13 @@ const SignUp = () => {
       pb={false}
       ph={false}
     >
+      <CustomModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        status={isSuccessful}
+        title="Registered Successfully!"
+        customRoute={"/home"}
+      />
       <CustomLoadingSpinner isLoading={isLoading} label="register" />
       <Text className="mt-2 mb-14 text-[40px] text-white font-black px-4">
         Sign Up
@@ -253,13 +260,6 @@ const SignUp = () => {
               </Text>
             </TouchableOpacity>
           </View>
-
-          <CustomModal
-            modalVisible={modalVisible}
-            setModalVisible={setModalVisible}
-            status={isSuccessful}
-            label="Registration"
-          />
 
           <CustomButton
             label="Create Account"
