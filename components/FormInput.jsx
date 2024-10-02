@@ -6,7 +6,7 @@ import ErrorMessage from "./ErrorMessage";
 const FormInput = ({
   label = "default",
   placeholder,
-  value = 0,
+  value = '',
   errorMessage,
   onBlur,
   onChangeValue,
