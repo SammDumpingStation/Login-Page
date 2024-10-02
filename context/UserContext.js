@@ -11,6 +11,8 @@ const UserContext = ({ children }) => {
   const [authId, setAuthId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log(authId);
+
   useEffect(() => {
     const fetchUser = async () => {
       // Fetch user only if authId is set

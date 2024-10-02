@@ -14,7 +14,7 @@ const index = () => {
 
   useEffect(() => {
     const checkUserSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
+      const { data, error } = await supabase.auth.getSession();      
 
       if (error) {
         console.error("Error fetching session:", error);
