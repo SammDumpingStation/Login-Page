@@ -1,11 +1,11 @@
-import validationLogic from './validation-logic'
-export const checkInput = (data, type, errorKey, setter) => {
-  const value = validationLogic.validate(data, type);
+import { validate } from "./validation-logic";
+
+export const checkInput = (data, type, errorKey, setError) => {    
+  const value = validate(data, type);    
   if (value) {
-    setter((prev) => ({
+    setError((prev) => ({
       ...prev,
       [errorKey]: value,
     }));
   }
 };
-

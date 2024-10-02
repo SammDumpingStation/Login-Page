@@ -6,11 +6,12 @@ import ErrorMessage from "./ErrorMessage";
 const FormInput = ({
   label = "default",
   placeholder,
-  value = '',
+  value = "",
   errorMessage,
   onBlur,
   onChangeValue,
   onError,
+  sampleMessage,
 }) => {
   const [hidePassword, setHidePassword] = useState(true);
 
@@ -41,8 +42,8 @@ const FormInput = ({
           inputMode={
             label === "email"
               ? "email-address"
-              : label === "phone-number"
-              ? "phone-pad"
+              : label === "phone_number"
+              ? "decimal"
               : "default"
           }
           secureTextEntry={label === "password" ? hidePassword : false}
@@ -64,7 +65,11 @@ const FormInput = ({
         )}
       </View>
 
-      {errorMessage ? <ErrorMessage value={errorMessage} /> : null}
+      {errorMessage ? (
+        <ErrorMessage value={errorMessage} />
+      ) : (
+        <Text className={`text-[#9b9b9b] italic ml-2 mt-2 ${!sampleMessage ? "absolute hidden" : ''}`}>{sampleMessage}</Text>
+      )}
     </View>
   );
 };

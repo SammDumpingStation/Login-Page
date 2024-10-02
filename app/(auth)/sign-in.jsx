@@ -11,7 +11,7 @@ import FormInput from "@/components/FormInput";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import icons from "@/constants/icons";
-import validationLogic from "../../utils/validation-logic";
+import { validate } from "../../utils/validation-logic";
 import CustomButton from "@/components/CustomButton";
 import CustomModal from "@/components/CustomModal";
 import resetInput from "@/utils/reset-input";
@@ -63,7 +63,7 @@ const SignIn = () => {
   };
 
   const checkInput = (data, type) => {
-    const value = validationLogic.validate(data, type);
+    const value = validate(data, type);
     let errorType = "";
     type === "email"
       ? (errorType = "emailError")

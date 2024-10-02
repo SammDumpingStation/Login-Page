@@ -33,7 +33,7 @@ const UserContext = ({ children }) => {
       }
     };
     fetchUser();
-  }, [authId]);
+  }, [authId, user]);
 
   return (
     <GlobalContext.Provider
