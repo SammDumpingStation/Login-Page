@@ -20,7 +20,7 @@ import changepwd from '../assets/icons/changepwd.png';
 import deleteIcon from "../assets/icons/delete.png";
 import logout from "../assets/icons/logout.png";
 import seller from "../assets/icons/seller.png";
-
+import plus from "../assets/icons/plus.png";
 export default {
   arrow,
   eyeHide,
@@ -43,5 +43,6 @@ export default {
   changepwd,
   deleteIcon,
   logout,
-  seller
+  seller,
+  plus
 };

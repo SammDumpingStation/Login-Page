@@ -1,34 +1,52 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, FlatList } from "react-native";
 import CustomContainer from "../../components/CustomContainer";
 import icons from "../../constants/icons";
 import images from "../../constants/images";
-
+import FormInput from "../../components/FormInput";
 const Home = () => {
-
   return (
-    <CustomContainer scroll={true}>
-      <View className="flex-row items-center justify-between">
-        <View className="flex-row gap-4">
-          <Image
-            source={icons.location}
-            className="w-6 h-[34px]"
-            resizeMode="contain"
-          />
-          <View>
-            <Text className="text-[12px] text-[#9B9B9B]">
-              Your Current Location
-            </Text>
-            <Text className="text-[14px]">Location not set</Text>
+    <CustomContainer>
+      <View className="">
+        <Text className="text-2xl font-black">To-do App</Text>
+        <View className="flex-row space-x-4">
+          <FormInput otherStyles="flex-1" placeholder="Add a Todo" />
+          <View className="justify-center items-center bg-[#F1F4F5] rounded-lg w-12 mt-6">
+            <Image
+              source={icons.plus}
+              className="h-8 w-8"
+              resizeMode="contain"
+              tintColor="#5CB88F"
+            />
           </View>
         </View>
-      </View>
-
-      <View className="w-full h-[135px] rounded-xl mt-6">
-        <Image
-          source={images.header}
-          className="w-full h-full"
-          resizeMode="contain"
+        <FlatList
+          data={[
+            { id: 1, text: 1 },
+            { id: 2, text: 2 },
+            { id: 3, text: 3 },
+            { id: 4, text: 4 },
+            { id: 5, text: 5 },
+          ]}
+          renderItem={({ item }) => <Text>{item.text}</Text>}
+          keyExtractor={(item) => item.id}
         />
+
+        {/*       <FlatList
+        data={ford}
+        contentContainerStyle={{
+          paddingTop: 24,
+        }}
+        renderItem={({ item }) => (
+          <ModelCarCard
+            model={item}
+            setIsClicked={setIsClicked}
+            isSelected={isClicked === item.name}
+            value={isClicked}
+            clickable={true}
+          />
+        )}
+        keyExtractor={(item) => item.name}
+      /> */}
       </View>
     </CustomContainer>
   );

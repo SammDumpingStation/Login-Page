@@ -12,15 +12,18 @@ const FormInput = ({
   onChangeValue,
   onError,
   sampleMessage,
+  otherStyles
 }) => {
   const [hidePassword, setHidePassword] = useState(true);
 
   useEffect(() => {
-    value.length === 0 || value.length > 0 ? onError("") : "";
+    if (value) {
+      value.length === 0 || value.length > 0 ? onError("") : "";
+    }
   }, [value]);
 
   return (
-    <View className="mt-6">
+    <View className={`mt-6 ${otherStyles}`}>
       <View className="relative">
         <TextInput
           onBlur={onBlur}
