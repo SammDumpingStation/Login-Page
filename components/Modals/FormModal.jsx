@@ -10,7 +10,7 @@ import { useUserContext } from "../../context/UserContext";
 import ErrorMessage from "../ErrorMessage";
 
 const FormModal = ({ modalVisible, setModalVisible }) => {
-  const { user } = useUserContext();
+  const { user, setUser } = useUserContext();
   const [databaseError, setDatabaseError] = useState("");
 
   const {
@@ -23,29 +23,29 @@ const FormModal = ({ modalVisible, setModalVisible }) => {
     mode: "all",
     defaultValues: {
       fullName: user.name,
-      email: user.email,
       phoneNumber: user.phone_number,
     },
   });
 
   const onCancel = () => {
     setModalVisible(!modalVisible);
+    setDatabaseError("");
     reset({
       fullName: user.name,
-      email: user.email,
       phoneNumber: user.phone_number,
     });
   };
 
-  const onSubmit = async (data) => {
-    const { data: user, error } = await updateUser(user.id, data);
+const onSubmit = async (data) => {
+  const { data: userData, error } = await updateUser(user.id, data);
 
-    if (error) {
-      setDatabaseError(error.message); // Set the error message to display
-    } else {
-      setModalVisible(!modalVisible); // Close modal on success
-    }
-  };
+  if (error) {
+    setDatabaseError(error.message); // Set the error message to display
+  } else {
+    setUser(userData); // Debug the returned data
+    setModalVisible(!modalVisible); // Close modal on success
+  }
+};
 
   return (
     <Modal visible={modalVisible} transparent animationType="slide">
@@ -81,21 +81,6 @@ const FormModal = ({ modalVisible, setModalVisible }) => {
 
             <Controller
               control={control}
-              name="email"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <FormInput
-                  label="email"
-                  placeholder="Email"
-                  value={value}
-                  errorMessage={errors.email ? errors.email.message : ""} // Use formState's errors
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                />
-              )}
-            />
-
-            <Controller
-              control={control}
               name="phoneNumber"
               render={({ field: { onChange, onBlur, value } }) => (
                 <FormInput
@@ -113,18 +98,19 @@ const FormModal = ({ modalVisible, setModalVisible }) => {
             <ErrorMessage value={databaseError} />
           </View>
 
-          <View className="flex-row border-t pt-4 border-[#ececec]">
+          <View className="flex-row border-t border-[#ececec]">
             <TouchableOpacity
               activeOpacity={0.7}
-              className="flex-1 "
+              className="flex-1 pt-4"
               onPress={onCancel}
             >
               <Text className="text-center text-[#F34336]">Cancel</Text>
             </TouchableOpacity>
             <View className="border-r border-[#ececec]" />
+
             <TouchableOpacity
               activeOpacity={0.7}
-              className="flex-1 "
+              className="flex-1 pt-4"
               onPress={handleSubmit(onSubmit)}
             >
               <Text className="text-center text-[#5CB88F]">Confirm</Text>

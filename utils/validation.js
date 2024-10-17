@@ -45,11 +45,6 @@ export const updateUserSchema = yup.object().shape({
     .min(4, "Name must contain at least 4 characters.")
     .max(50, "Name must contain at most 50 characters."),
 
-  email: yup
-    .string()
-    .required("Email field is required.")
-    .email("Please enter a valid email address."),
-
   phoneNumber: yup
     .string()
     .required("Phone Number field is required.")
