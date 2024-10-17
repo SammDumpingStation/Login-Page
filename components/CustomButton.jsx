@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import React from "react";
 import { Link } from "expo-router";
 import icons from "@/constants/icons";
@@ -16,7 +16,7 @@ const CustomButton = ({
   return (
     <TouchableOpacity
       className={`${
-        buttonCustomBg || isLoading ? "bg-[#E4E7EB]" : "bg-[#5CB88F]"
+        disabled || isLoading ? "bg-[#E4E7EB]" : "bg-[#5CB88F]"
       } h-[57px] rounded-lg relative justify-center items-center flex-row space-x-4 ${otherStyles}`}
       activeOpacity={0.7}
       onPress={onPress}
@@ -27,13 +27,17 @@ const CustomButton = ({
       ) : (
         ""
       )}
-      <Text
-        className={`text-base font-bold text-center ${
-          textStyle || isLoading ? "text-[#9b9b9b]" : "text-white"
-        }`}
-      >
-        {label}
-      </Text>
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#5CB88F" />
+      ) : (
+        <Text
+          className={`text-base font-bold text-center justify-center items-center ${
+            textStyle || isLoading ? "text-[#9b9b9b]" : "text-white"
+          }`}
+        >
+          {label}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };

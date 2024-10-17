@@ -6,7 +6,6 @@ import icons from "@/constants/icons";
 import { useUserContext } from "../context/UserContext";
 import { supabase } from "@/lib/supabase";
 import CustomLoadingSpinner from "@/components/CustomLoadingSpinner";
-import CustomModal from "@/components/CustomModal";
 
 const index = () => {
   const { isLoading, setAuthId, user } = useUserContext();
@@ -14,7 +13,7 @@ const index = () => {
 
   useEffect(() => {
     const checkUserSession = async () => {
-      const { data, error } = await supabase.auth.getSession();      
+      const { data, error } = await supabase.auth.getSession();
 
       if (error) {
         console.error("Error fetching session:", error);
@@ -23,14 +22,7 @@ const index = () => {
       if (data.session != null) {
         const userId = data.session.user.id;
         setAuthId(userId); // Set authId here
-        if (user != null && !isLoading) {
-          setModalVisible(true);
-          const timer = setTimeout(() => {
-            setModalVisible(false);
-            router.replace("/home");
-          }, 3000);
-          return () => clearTimeout(timer);
-        }
+        router.replace("/home");
       } else {
         if (data.session === null && !isLoading) {
           router.replace("/sign-in");
@@ -45,13 +37,6 @@ const index = () => {
       <CustomLoadingSpinner
         isLoading={isLoading}
         customText="Checking if you have logged in before"
-      />
-      <CustomModal
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        customRoute={"/home"}
-        title="Log-in Successfully"
-        status={true}
       />
       <View className=" h-full justify-center items-center flex-row gap-2">
         <Image

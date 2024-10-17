@@ -2,7 +2,6 @@ import { View, Text, Modal, Image, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import icons from "../../constants/icons";
 import FormInput from "../FormInput";
-import { checkInput } from "../../utils/check-form-input";
 import { updateUser } from "../../lib/supabase";
 
 const FormModal = ({ modalVisible, setModalVisible, user }) => {

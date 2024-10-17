@@ -11,106 +11,59 @@ import FormInput from "@/components/FormInput";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import icons from "@/constants/icons";
-import { validate } from "../../utils/validation-logic";
+import { signInSchema } from "../../utils/validation";
 import CustomButton from "@/components/CustomButton";
-import CustomModal from "@/components/CustomModal";
-import resetInput from "@/utils/reset-input";
-import toast from "@/utils/toast-message";
-import CustomLoadingSpinner from "@/components/CustomLoadingSpinner";
 import Toast from "react-native-toast-message";
 import { signInUser } from "@/lib/supabase";
 import { useUserContext } from "../../context/UserContext";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const SignIn = () => {
   const { authId, setAuthId } = useUserContext();
-  const [formData, setFormData] = useState({
-    email: "",
-    emailError: "",
-    password: "",
-    passwordError: "",
+
+  const [databaseError, setDatabaseError] = useState("");
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: yupResolver(signInSchema),
+    mode: "onBlur",
+    defaultValues: {
+      email: "sammcaag@gmail.com",
+      password: "12345657754",
+    },
   });
-  const [modalVisible, setModalVisible] = useState(false);
-  const [isSuccessful, setIsSuccessful] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
+  // Watch email and password
+  const email = watch("email");
+  const password = watch("password");
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (modalVisible) {
-        setModalVisible(false);
-        router.replace("/home");
-      }
-    }, 3000);
+    setDatabaseError("");
+  }, [email, password]);
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [modalVisible]);
-
-  const setData = (key, value) => {
-    setFormData((prev) => ({ ...prev, [key]: value }));
-  };
-  const isSuccess = (success) => {
-    if (success) {
-      setIsSuccessful(true);
-      setFormData(resetInput("login"));
-    } else {
-      toast.showToast({
-        success: false,
-        customMessage: "Something Went Wrong, Please try again!",
-      });
-    }
-    setModalVisible(!modalVisible);
-  };
-
-  const checkInput = (data, type) => {
-    const value = validate(data, type);
-    let errorType = "";
-    type === "email"
-      ? (errorType = "emailError")
-      : (errorType = "passwordError");
-    if (value) {
-      setFormData((prev) => ({
-        ...prev,
-        [errorType]: value,
-      }));
-    }
-  };
-
-  const signInWithEmail = async () => {
+  const onSubmit = async (data) => {
     Keyboard.dismiss();
-    checkInput(formData.email, "email");
-    checkInput(formData.password, "password");
-    const hasErrors = formData.emailError || formData.passwordError;
-    const isEmpty = !formData.email || !formData.password;
-
-    if (hasErrors || isEmpty) {
-      toast.showToast({ success: false });
-      return;
-    }
     try {
-      setIsLoading(true);
-      const session = await signInUser(formData.email, formData.password);
+      const { user, error } = await signInUser(data.email, data.password);
 
       //set the context we made
-      if (session && session.user) {
-        const authUserId = session.user.id; // Get the Auth ID from the session
+      if (user && user.user) {
+        const authUserId = user.user.id; // Get the Auth ID from the user
         setAuthId(authUserId); // Set the Auth ID in the context
-        if (authId && authId != null) {
-          isSuccess(true);
-        }
+        router.replace("/home");
       } else {
+        console.log(error);
         // Handle the case where sign-in was successful but no user data is returned
-        console.error("No user data returned after sign-in");
-        isSuccess(false);
+        setDatabaseError(error.message);
       }
     } catch (error) {
       console.log(error);
-      setData(
-        "emailError",
-        "Email or Password is incorrect, Please Try Again."
-      );
     } finally {
-      setIsLoading(false);
     }
   };
 
@@ -121,14 +74,6 @@ const SignIn = () => {
       pb={false}
       ph={false}
     >
-      <CustomModal
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        status={isSuccessful}
-        title="Log-in Successfully!"
-        customRoute={"/home"}
-      />
-      <CustomLoadingSpinner isLoading={isLoading} label="register" />
       <Text className="mt-2 px-4 mb-14 text-[40px] text-white font-black">
         Sign In
       </Text>
@@ -142,30 +87,45 @@ const SignIn = () => {
             Please Log-in your credentials
           </Text>
         </View>
-        <FormInput
-          label="email"
-          placeholder="Email"
-          value={formData.email}
-          errorMessage={formData.emailError}
-          onBlur={() => checkInput(formData.email, "email")}
-          onChangeValue={(text) => setData("email", text)}
-          onError={(text) => setData("emailError", text)}
+        <Controller
+          control={control}
+          name="email"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <FormInput
+              label="email"
+              placeholder="Email"
+              value={value}
+              errorMessage={errors.email ? errors.email.message : ""} // Use formState's errors
+              onBlur={onBlur}
+              onChangeText={onChange}
+            />
+          )}
         />
-
-        <FormInput
-          label="password"
-          placeholder="Password"
-          value={formData.password}
-          errorMessage={formData.passwordError}
-          onBlur={() => checkInput(formData.password, "password")}
-          onChangeValue={(text) => setData("password", text)}
-          onError={(text) => setData("passwordError", text)}
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, onBlur, value } }) => (
+            <FormInput
+              label="password"
+              placeholder="Password"
+              value={value}
+              errorMessage={errors.password ? errors.password.message : ""} // Use formState's errors
+              onBlur={onBlur}
+              onChangeText={onChange}
+            />
+          )}
         />
+        <ErrorMessage value={databaseError} />
         <View className="pb-8 pt-4">
           <Text className="text-[#9b9b9b] text-right">Forgot Password?</Text>
         </View>
 
-        <CustomButton label="Log-in" onPress={signInWithEmail} />
+        <CustomButton
+          label="Log-in"
+          onPress={handleSubmit(onSubmit)}
+          disabled={isSubmitting}
+          isLoading={isSubmitting}
+        />
       </KeyboardAvoidingView>
 
       <View className="bg-white px-4 flex-1">

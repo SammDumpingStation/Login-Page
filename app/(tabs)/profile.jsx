@@ -10,8 +10,9 @@ import LogOutCard from "../../components/Profile/LogOutCard";
 import FormModal from "../../components/Modals/FormModal";
 
 const Profile = () => {
-  const { user } = useUserContext();
+  const { user, authId } = useUserContext();
   const [modalVisible, setModalVisible] = useState(false);
+  
 
   return (
     <CustomContainer scroll={true}>

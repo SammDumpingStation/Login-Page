@@ -9,18 +9,18 @@ const FormInput = ({
   value = "",
   errorMessage,
   onBlur,
-  onChangeValue,
+  onChangeText,
   onError,
   sampleMessage,
-  otherStyles
+  otherStyles,
 }) => {
   const [hidePassword, setHidePassword] = useState(true);
 
-  useEffect(() => {
-    if (value) {
-      value.length === 0 || value.length > 0 ? onError("") : "";
-    }
-  }, [value]);
+  // useEffect(() => {
+  //   if (value) {
+  //     value.length === 0 || value.length > 0 ? onError("") : "";
+  //   }
+  // }, [value]);
 
   return (
     <View className={`mt-6 ${otherStyles}`}>
@@ -37,7 +37,7 @@ const FormInput = ({
           }`}
           placeholderTextColor="#9b9b9b"
           placeholder={placeholder}
-          onChangeText={(text) => onChangeValue(text)}
+          onChangeText={(text) => onChangeText(text)}
           autoCapitalize={
             label === "email" || label === "password" ? "none" : "sentences"
           }
@@ -52,7 +52,7 @@ const FormInput = ({
           secureTextEntry={label === "password" ? hidePassword : false}
           value={value}
         />
-        {label === "password" ? (
+        {label === "password" && (
           <TouchableOpacity
             className="absolute right-0 px-4 items-center h-full justify-center"
             onPress={() => setHidePassword(!hidePassword)}
@@ -63,15 +63,19 @@ const FormInput = ({
               source={hidePassword ? icons.eyeHide : icons.eye}
             />
           </TouchableOpacity>
-        ) : (
-          ""
         )}
       </View>
 
       {errorMessage ? (
         <ErrorMessage value={errorMessage} />
       ) : (
-        <Text className={`text-[#9b9b9b] italic ml-2 mt-2 ${!sampleMessage ? "absolute hidden" : ''}`}>{sampleMessage}</Text>
+        <Text
+          className={`text-[#9b9b9b] italic ml-2 mt-2 ${
+            !sampleMessage ? "absolute hidden" : ""
+          }`}
+        >
+          {sampleMessage}
+        </Text>
       )}
     </View>
   );
