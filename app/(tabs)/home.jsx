@@ -1,11 +1,11 @@
 import { View, Text, Image, FlatList } from "react-native";
 import CustomContainer from "../../components/CustomContainer";
 import icons from "../../constants/icons";
-import images from "../../constants/images";
 import FormInput from "../../components/FormInput";
+
 const Home = () => {
   return (
-    <CustomContainer>
+    <CustomContainer scroll={true}>
       <View className="">
         <Text className="text-2xl font-black">To-do App</Text>
         <View className="flex-row space-x-4">
@@ -20,6 +20,7 @@ const Home = () => {
           </View>
         </View>
         <FlatList
+          scrollEnabled={false}
           data={[
             { id: 1, text: 1 },
             { id: 2, text: 2 },

@@ -11,29 +11,31 @@ const UserContext = ({ children }) => {
   const [authId, setAuthId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  console.log(user ? user : "None");
+
   useEffect(() => {
     const fetchUser = async () => {
       // Fetch user only if authId is set
       try {
+        setIsLoading(true);
         if (authId) {
-          const response = await getCurrentUser(authId);
-          if (response) {
-            setUser(response);
+          const { data, error } = await getCurrentUser(authId);
+          if (data) {
+            setUser(data);
           } else {
-            setUser(null);
+            setUser(error.message);
           }
         }
       } catch (error) {
         console.error("Error fetching user:", error);
       } finally {
-        const timer = setTimeout(() => {
+        setTimeout(() => {
           setIsLoading(false);
-        }, 3000);
-        return () => clearTimeout(timer);
+        }, 2000);
       }
     };
     fetchUser();
-  }, [authId, user]);
+  }, [authId]);
 
   return (
     <GlobalContext.Provider

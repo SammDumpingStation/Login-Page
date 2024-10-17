@@ -11,7 +11,7 @@ const CustomContainer = ({
   ph = true,
 }) => {
   return (
-    <SafeAreaView className={`bg-[#f7f7f7] pt-6  flex-1 h-full ${otherStyles}`}>
+    <SafeAreaView className={`bg-[#f7f7f7] pt-6 relative h-full ${otherStyles}`}>
       <StatusBar style="dark" />
       {scroll ? (
         <ScrollView

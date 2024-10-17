@@ -19,7 +19,6 @@ const Profile = () => {
       <FormModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        user={user}
       />
       <BackButtonHeader title="My Profile" />
       <View className="w-full bg-white h-[200px] rounded-lg mt-4 justify-center items-center relative">

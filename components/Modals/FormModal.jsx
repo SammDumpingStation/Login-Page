@@ -3,30 +3,55 @@ import React, { useState } from "react";
 import icons from "../../constants/icons";
 import FormInput from "../FormInput";
 import { updateUser } from "../../lib/supabase";
+import { Controller, useForm } from "react-hook-form";
+import { updateUserSchema } from "../../utils/validation";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useUserContext } from "../../context/UserContext";
+import ErrorMessage from "../ErrorMessage";
 
-const FormModal = ({ modalVisible, setModalVisible, user }) => {
-  const [error, setError] = useState({
-    name: "",
-    email: "",
-    phone_number: "",
-    avatar: "",
+const FormModal = ({ modalVisible, setModalVisible }) => {
+  const { user } = useUserContext();
+  const [databaseError, setDatabaseError] = useState("");
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: yupResolver(updateUserSchema),
+    mode: "all",
+    defaultValues: {
+      fullName: user.name,
+      email: user.email,
+      phoneNumber: user.phone_number,
+    },
   });
 
-  const [formData, setFormData] = useState({
-    name: user.name || '',
-    email: user.email || '',
-    phone_number: user.phone_number || '',
-    avatar: "",
-  });
-  const setData = (key, value, setter) => {
-    setter((prev) => ({ ...prev, [key]: value }));
+  const onCancel = () => {
+    setModalVisible(!modalVisible);
+    reset({
+      fullName: user.name,
+      email: user.email,
+      phoneNumber: user.phone_number,
+    });
+  };
+
+  const onSubmit = async (data) => {
+    const { data: user, error } = await updateUser(user.id, data);
+
+    if (error) {
+      setDatabaseError(error.message); // Set the error message to display
+    } else {
+      setModalVisible(!modalVisible); // Close modal on success
+    }
   };
 
   return (
     <Modal visible={modalVisible} transparent animationType="slide">
       <View className="bg-[#00000040] flex-1 relative">
         <View className="bg-white m-auto w-[90%] p-4 rounded-xl">
-          <View className="items-center space-x-2 flex-row">
+          <View className="items-center space-x-2 flex-row ">
             <Image
               source={icons.logo}
               tintColor="#5CB88F"
@@ -40,98 +65,69 @@ const FormModal = ({ modalVisible, setModalVisible, user }) => {
           </View>
 
           <View className="mb-12">
-            <FormInput
-              placeholder="Full Name"
-              value={formData.name}
-              errorMessage={error.name}
-              onBlur={() =>
-                checkInput(formData.name, "default", "name", setError)
-              }
-              onChangeValue={(text) => setData("name", text, setFormData)}
-              onError={(text) => setData("name", text, setError)}
-              sampleMessage="ex. John Doe"
+            <Controller
+              control={control}
+              name="fullName"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <FormInput
+                  placeholder="Full Name"
+                  value={value}
+                  errorMessage={errors.fullName ? errors.fullName.message : ""} // Use formState's errors
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                />
+              )}
             />
-            <FormInput
-              label="email"
-              placeholder="Email"
-              value={formData.email}
-              errorMessage={error.email}
-              onBlur={() =>
-                checkInput(formData.email, "email", "email", setError)
-              }
-              onChangeValue={(text) => setData("email", text, setFormData)}
-              onError={(text) => setData("email", text, setError)}
-              sampleMessage="ex. example@email.com"
+
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <FormInput
+                  label="email"
+                  placeholder="Email"
+                  value={value}
+                  errorMessage={errors.email ? errors.email.message : ""} // Use formState's errors
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                />
+              )}
             />
-            <FormInput
-              label="phone_number"
-              placeholder="Phone Number"
-              value={formData.phone_number}
-              errorMessage={error.phone_number}
-              onBlur={() =>
-                checkInput(
-                  formData.phone_number,
-                  "phone_number",
-                  "phone_number",
-                  setError
-                )
-              }
-              onChangeValue={(text) =>
-                setData("phone_number", text, setFormData)
-              }
-              onError={(text) => setData("phone_number", text, setError)}
-              sampleMessage="ex. 09123456789"
+
+            <Controller
+              control={control}
+              name="phoneNumber"
+              render={({ field: { onChange, onBlur, value } }) => (
+                <FormInput
+                  label="phone_number"
+                  placeholder="Phone Number"
+                  value={value}
+                  errorMessage={
+                    errors.phoneNumber ? errors.phoneNumber.message : ""
+                  } // Use formState's errors
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                />
+              )}
             />
+            <ErrorMessage value={databaseError} />
           </View>
 
-          <View className="flex-row space-x-2">
+          <View className="flex-row border-t pt-4 border-[#ececec]">
             <TouchableOpacity
               activeOpacity={0.7}
-              className=" py-2 rounded-lg flex-1 border border-[#F34336]"
-              onPress={() => {
-                setFormData({
-                  name: user.name,
-                  email: user.email,
-                  phone_number: 0,
-                  avatar: "",
-                });
-                setError({
-                  name: "",
-                  email: "",
-                  phone_number: "",
-                  avatar: "",
-                });
-                setModalVisible(!modalVisible);
-              }}
+              className="flex-1 "
+              onPress={onCancel}
             >
-              <Text className="text-center">Cancel</Text>
+              <Text className="text-center text-[#F34336]">Cancel</Text>
             </TouchableOpacity>
+            <View className="border-r border-[#ececec]" />
             <TouchableOpacity
               activeOpacity={0.7}
-              className="bg-[#5CB88F] py-2 rounded-lg flex-1"
-              onPress={() => {
-                checkInput(formData.name, "default", "name", setError);
-                checkInput(formData.email, "email", "email", setError);
-                checkInput(
-                  formData.phone_number,
-                  "phone_number",
-                  "phone_number",
-                  setError
-                );
-                const hasErrors =
-                  error.name || error.email || error.phone_number;
-                // this if statement checks if any of our input fields are empty, if they are, this will return true and will show a toast and an error message
-                const isEmpty =
-                  !formData.name || !formData.email || !formData.phone_number;
-
-                if (hasErrors || isEmpty) {
-                  return;
-                }
-                updateUser(user.id, formData);
-                setModalVisible(!modalVisible);
-              }}
+              className="flex-1 "
+              onPress={handleSubmit(onSubmit)}
             >
-              <Text className="text-center text-white">Confirm</Text>
+              <Text className="text-center text-[#5CB88F]">Confirm</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -10,21 +10,14 @@ const FormInput = ({
   errorMessage,
   onBlur,
   onChangeText,
-  onError,
-  sampleMessage,
   otherStyles,
 }) => {
   const [hidePassword, setHidePassword] = useState(true);
 
-  // useEffect(() => {
-  //   if (value) {
-  //     value.length === 0 || value.length > 0 ? onError("") : "";
-  //   }
-  // }, [value]);
-
   return (
     <View className={`mt-6 ${otherStyles}`}>
       <View className="relative">
+        {value && <Text className="text-[#9b9b9b] pb-2">{placeholder}</Text>}
         <TextInput
           onBlur={onBlur}
           cursorColor="#9b9b9b"
@@ -66,17 +59,7 @@ const FormInput = ({
         )}
       </View>
 
-      {errorMessage ? (
-        <ErrorMessage value={errorMessage} />
-      ) : (
-        <Text
-          className={`text-[#9b9b9b] italic ml-2 mt-2 ${
-            !sampleMessage ? "absolute hidden" : ""
-          }`}
-        >
-          {sampleMessage}
-        </Text>
-      )}
+      {errorMessage && <ErrorMessage value={errorMessage} />}
     </View>
   );
 };

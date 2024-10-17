@@ -21,8 +21,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ErrorMessage from "@/components/ErrorMessage";
 
 const SignIn = () => {
-  const { authId, setAuthId } = useUserContext();
-
+  const { setAuthId } = useUserContext();
   const [databaseError, setDatabaseError] = useState("");
   const {
     control,
@@ -31,7 +30,7 @@ const SignIn = () => {
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(signInSchema),
-    mode: "onBlur",
+    mode: "all",
     defaultValues: {
       email: "sammcaag@gmail.com",
       password: "12345657754",
@@ -50,7 +49,6 @@ const SignIn = () => {
     Keyboard.dismiss();
     try {
       const { user, error } = await signInUser(data.email, data.password);
-
       //set the context we made
       if (user && user.user) {
         const authUserId = user.user.id; // Get the Auth ID from the user

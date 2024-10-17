@@ -29,7 +29,7 @@ const SignUp = () => {
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(signUpSchema),
-    mode: "onBlur",
+    mode: "all",
     defaultValues: {
       fullName: "Samm Caagbay",
       email: "sammcaag@gmail.com",
