@@ -21,6 +21,7 @@ import deleteIcon from "../assets/icons/delete.png";
 import logout from "../assets/icons/logout.png";
 import seller from "../assets/icons/seller.png";
 import plus from "../assets/icons/plus.png";
+import x from '../assets/icons/x.png'
 export default {
   arrow,
   eyeHide,
@@ -44,5 +45,6 @@ export default {
   deleteIcon,
   logout,
   seller,
-  plus
+  plus,
+  x
 };

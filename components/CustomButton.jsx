@@ -1,22 +1,31 @@
 import { View, Text, TouchableOpacity, Image, ActivityIndicator } from "react-native";
 import React from "react";
-import { Link } from "expo-router";
-import icons from "@/constants/icons";
+import {
+  BallIndicator,
+  BarIndicator,
+  DotIndicator,
+  MaterialIndicator,
+  PacmanIndicator,
+  PulseIndicator,
+  SkypeIndicator,
+  UIActivityIndicator,
+  WaveIndicator,
+} from "react-native-indicators";
 
 const CustomButton = ({
   label,
   otherStyles,
-  buttonCustomBg,
   textStyle,
   withIcon,
   onPress,
   disabled = false,
   isLoading,
 }) => {
+
   return (
     <TouchableOpacity
       className={`${
-        disabled || isLoading ? "bg-[#E4E7EB]" : "bg-[#5CB88F]"
+        disabled ? "bg-[#E4E7EB]" : "bg-[#5CB88F]"
       } h-[57px] rounded-lg relative justify-center items-center flex-row space-x-4 ${otherStyles}`}
       activeOpacity={0.7}
       onPress={onPress}
@@ -28,7 +37,7 @@ const CustomButton = ({
         ""
       )}
       {isLoading ? (
-        <ActivityIndicator size="large" color="#5CB88F" />
+        <BarIndicator color="#5CB88F" count={5} size={25} />
       ) : (
         <Text
           className={`text-base font-bold text-center justify-center items-center ${

@@ -1,13 +1,23 @@
-import { View, Text, Modal, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import icons from "../../constants/icons";
 import { router } from "expo-router";
 import { logOut } from "../../lib/supabase";
+import Modal from "react-native-modal";
 
 const LogOutModal = ({ modalVisible, setModalVisible }) => {
   return (
-    <Modal visible={modalVisible} transparent animationType="fade">
-      <View className="bg-[#00000040] flex-1">
+    <Modal
+      isVisible={modalVisible}
+      animationIn="zoomIn"
+      animationOut="zoomOut"
+      backdropOpacity={0.3}
+      hideModalContentWhileAnimating={true}
+      onBackdropPress={() => setModalVisible(!modalVisible)}
+      className="m-0"
+      useNativeDriver={true}
+    >
+      <View className="flex-1">
         <View className="bg-white m-auto w-72 justify-between p-4 pt-8 rounded-xl space-y-12">
           <View className="items-center space-y-2">
             <Image

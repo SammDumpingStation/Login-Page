@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, Image, TouchableOpacity, Modal } from "react-native";
 import React, { useState } from "react";
 import { useUserContext } from "../../context/UserContext";
 import CustomContainer from "../../components/CustomContainer";
@@ -12,7 +12,6 @@ import FormModal from "../../components/Modals/FormModal";
 const Profile = () => {
   const { user, authId } = useUserContext();
   const [modalVisible, setModalVisible] = useState(false);
-  
 
   return (
     <CustomContainer scroll={true}>
@@ -20,6 +19,7 @@ const Profile = () => {
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
       />
+
       <BackButtonHeader title="My Profile" />
       <View className="w-full bg-white h-[200px] rounded-lg mt-4 justify-center items-center relative">
         <TouchableOpacity

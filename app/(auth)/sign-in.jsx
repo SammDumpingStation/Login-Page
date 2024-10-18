@@ -26,20 +26,25 @@ const SignIn = () => {
   const {
     control,
     handleSubmit,
+    reset,
+    getValues,
     watch,
     formState: { errors, isSubmitting },
+    clearErrors,
   } = useForm({
     resolver: yupResolver(signInSchema),
     mode: "all",
     defaultValues: {
-      email: "sammcaag@gmail.com",
-      password: "12345657754",
+      email: "",
+      password: "",
     },
   });
 
   // Watch email and password
   const email = watch("email");
   const password = watch("password");
+  const emailValue = getValues("email");
+  const passwordValue = getValues("password");
 
   useEffect(() => {
     setDatabaseError("");
@@ -55,13 +60,11 @@ const SignIn = () => {
         setAuthId(authUserId); // Set the Auth ID in the context
         router.replace("/home");
       } else {
-        console.log(error);
         // Handle the case where sign-in was successful but no user data is returned
         setDatabaseError(error.message);
       }
     } catch (error) {
       console.log(error);
-    } finally {
     }
   };
 
@@ -121,7 +124,7 @@ const SignIn = () => {
         <CustomButton
           label="Log-in"
           onPress={handleSubmit(onSubmit)}
-          disabled={isSubmitting}
+          disabled={isSubmitting || !!databaseError}
           isLoading={isSubmitting}
         />
       </KeyboardAvoidingView>
@@ -143,7 +146,14 @@ const SignIn = () => {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => {
-              Toast.hide();
+              if (!emailValue || !passwordValue) {
+                reset({
+                  email: "",
+                  password: "",
+                });
+              }
+              clearErrors(["email", "password"]); // Ensure both errors are cleared
+              setDatabaseError("");
               router.push("/sign-up");
             }}
           >

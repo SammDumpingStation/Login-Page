@@ -31,10 +31,10 @@ const SignUp = () => {
     resolver: yupResolver(signUpSchema),
     mode: "all",
     defaultValues: {
-      fullName: "Samm Caagbay",
-      email: "sammcaag@gmail.com",
-      password: "12345678",
-      confirmPassword: "12345678",
+      fullName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
