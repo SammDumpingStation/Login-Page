@@ -1,6 +1,6 @@
 import { View, Text, Image } from "react-native";
 import React, { useState } from "react";
-import { BarIndicator, UIActivityIndicator } from "react-native-indicators";
+import { SkypeIndicator } from "react-native-indicators";
 import Modal from "react-native-modal";
 import icons from "../../constants/icons";
 
@@ -26,7 +26,7 @@ const LoadingModal = ({
             resizeMode="contain"
             tintColor="#5CB88F"
           />
-          <UIActivityIndicator count={12} size={35} color="#5CB88F" />
+          <SkypeIndicator size={35} color="#5CB88F" />
           <Text className="text-lg font-bold mt-12 ">{label}</Text>
         </View>
       </View>

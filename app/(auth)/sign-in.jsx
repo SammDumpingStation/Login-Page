@@ -13,16 +13,17 @@ import { router } from "expo-router";
 import icons from "@/constants/icons";
 import { signInSchema } from "../../utils/validation";
 import CustomButton from "@/components/CustomButton";
-import Toast from "react-native-toast-message";
 import { signInUser } from "@/lib/supabase";
 import { useUserContext } from "../../context/UserContext";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ErrorMessage from "@/components/ErrorMessage";
+import LoadingModal from "../../components/Modals/LoadingModal";
 
 const SignIn = () => {
   const { setAuthId } = useUserContext();
   const [databaseError, setDatabaseError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const {
     control,
     handleSubmit,
@@ -52,6 +53,7 @@ const SignIn = () => {
 
   const onSubmit = async (data) => {
     Keyboard.dismiss();
+    setIsLoading(true);
     try {
       const { user, error } = await signInUser(data.email, data.password);
       //set the context we made
@@ -65,6 +67,8 @@ const SignIn = () => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -75,6 +79,7 @@ const SignIn = () => {
       pb={false}
       ph={false}
     >
+      <LoadingModal loadingModal={isLoading} label="Checking Credentials" />
       <Text className="mt-2 px-4 mb-14 text-[40px] text-white font-black">
         Sign In
       </Text>

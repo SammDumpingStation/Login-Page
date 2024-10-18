@@ -1,11 +1,36 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import icons from "../../constants/icons";
 import { router } from "expo-router";
 import { logOut } from "../../lib/supabase";
 import Modal from "react-native-modal";
+import LoadingModal from "./LoadingModal";
 
 const LogOutModal = ({ modalVisible, setModalVisible }) => {
+  const [databaseError, setDatabaseError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const onLogout = async () => {
+    setIsLoading(true);
+    try {
+      const { error } = await logOut();
+      if (error) {
+        // Properly check if there's an error from Supabase
+        setDatabaseError(
+          error.message || "Failed to log out. Please try again."
+        );
+      } else {
+        // No error, proceed with the router and modal
+        router.replace("/sign-in");
+        setModalVisible(false);
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+      setDatabaseError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Modal
       isVisible={modalVisible}
@@ -17,6 +42,7 @@ const LogOutModal = ({ modalVisible, setModalVisible }) => {
       className="m-0"
       useNativeDriver={true}
     >
+      <LoadingModal loadingModal={isLoading} label="Logging you out..." />
       <View className="flex-1">
         <View className="bg-white m-auto w-72 justify-between p-4 pt-8 rounded-xl space-y-12">
           <View className="items-center space-y-2">
@@ -32,26 +58,22 @@ const LogOutModal = ({ modalVisible, setModalVisible }) => {
             </Text>
           </View>
 
-          <View className="flex-row space-x-2">
+          <View className="flex-row border-t border-[#E5E4E2]">
             <TouchableOpacity
               activeOpacity={0.7}
-              className=" py-2 rounded-lg flex-1 border border-[#F34336]"
-              onPress={() => {
-                setModalVisible(!modalVisible);
-              }}
+              className="flex-1 pt-4"
+              onPress={() => setModalVisible(!modalVisible)}
             >
-              <Text className="text-center">Cancel</Text>
+              <Text className="text-center text-[#F34336]">Cancel</Text>
             </TouchableOpacity>
+            <View className="border-r border-[#E5E4E2] mt-2 -mb-2" />
+
             <TouchableOpacity
               activeOpacity={0.7}
-              className="bg-[#5CB88F] py-2 rounded-lg flex-1"
-              onPress={async () => {
-                await logOut();
-                router.replace("/sign-in");
-                setModalVisible(!modalVisible);
-              }}
+              className="flex-1 pt-4"
+              onPress={onLogout}
             >
-              <Text className="text-center text-white">Confirm</Text>
+              <Text className="text-center text-[#5CB88F]">Confirm</Text>
             </TouchableOpacity>
           </View>
         </View>

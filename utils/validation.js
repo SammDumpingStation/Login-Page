@@ -35,7 +35,10 @@ export const signUpSchema = yup.object().shape({
   confirmPassword: yup
     .string()
     .required("Confirm Password field is required.")
-    .oneOf([yup.ref("password"), null], "Passwords must match"),
+    .oneOf(
+      [yup.ref("password"), null],
+      "Make sure both passwords match before continuing."
+    ),
 });
 
 export const updateUserSchema = yup.object().shape({

@@ -63,13 +63,10 @@ const FormModal = ({ modalVisible, setModalVisible }) => {
       <LoadingModal loadingModal={isSubmitting} />
       <View className="relative">
         <View className="bg-white m-auto w-[90%] p-4 rounded-xl">
-          <View className="items-center space-x-2 flex-row mb-4">
-            <View className="items-start ">
-              <Text className="text-xl font-bold text-center">
-                Edit Profile
-              </Text>
-              <Text className="text-[#9b9b9b]">
-                Make changes to your profile here. Click save when you're done.
+          <View className="items-center space-x-2 flex-row">
+            <View className="items-center flex-1">
+              <Text className="text-2xl font-black text-center">
+                Update Details
               </Text>
             </View>
           </View>
@@ -123,7 +120,7 @@ const FormModal = ({ modalVisible, setModalVisible }) => {
               className="flex-1 pt-4"
               onPress={handleSubmit(onSubmit)}
             >
-              <Text className="text-center text-[#5CB88F]">Confirm</Text>
+              <Text className="text-center text-[#5CB88F]">Save</Text>
             </TouchableOpacity>
           </View>
         </View>

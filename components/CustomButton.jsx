@@ -1,16 +1,6 @@
-import { View, Text, TouchableOpacity, Image, ActivityIndicator } from "react-native";
+import { Text, TouchableOpacity, Image } from "react-native";
 import React from "react";
-import {
-  BallIndicator,
-  BarIndicator,
-  DotIndicator,
-  MaterialIndicator,
-  PacmanIndicator,
-  PulseIndicator,
-  SkypeIndicator,
-  UIActivityIndicator,
-  WaveIndicator,
-} from "react-native-indicators";
+import { SkypeIndicator } from "react-native-indicators";
 
 const CustomButton = ({
   label,
@@ -21,7 +11,6 @@ const CustomButton = ({
   disabled = false,
   isLoading,
 }) => {
-
   return (
     <TouchableOpacity
       className={`${
@@ -37,7 +26,7 @@ const CustomButton = ({
         ""
       )}
       {isLoading ? (
-        <BarIndicator color="#5CB88F" count={5} size={25} />
+        <SkypeIndicator color="#5CB88F" size={35} />
       ) : (
         <Text
           className={`text-base font-bold text-center justify-center items-center ${
