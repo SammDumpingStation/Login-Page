@@ -5,7 +5,6 @@ import { SkypeIndicator } from "react-native-indicators";
 const CustomButton = ({
   label,
   otherStyles,
-  textStyle,
   withIcon,
   onPress,
   disabled = false,
@@ -30,7 +29,7 @@ const CustomButton = ({
       ) : (
         <Text
           className={`text-base font-bold text-center justify-center items-center ${
-            textStyle || isLoading ? "text-[#9b9b9b]" : "text-white"
+            disabled || isLoading ? "text-[#9b9b9b]" : "text-white"
           }`}
         >
           {label}

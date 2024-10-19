@@ -14,12 +14,13 @@ import Modal from "react-native-modal";
 const FormModal = ({ modalVisible, setModalVisible }) => {
   const { user, setUser } = useUserContext();
   const [databaseError, setDatabaseError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(updateUserSchema),
     mode: "all",
@@ -39,15 +40,22 @@ const FormModal = ({ modalVisible, setModalVisible }) => {
   };
 
   const onSubmit = async (data) => {
-    const { data: userData, error } = await updateUser(user.id, data);
+    setIsLoading(true);
+    try {
+      const { data: userData, error } = await updateUser(user.id, data);
 
-    if (error) {
-      setDatabaseError(error.message); // Set the error message to display
-    } else {
-      setUser(userData); // Debug the returned data
-      setModalVisible(!modalVisible); // Close modal on success
+      if (error) {
+        setDatabaseError(error.message); // Set the error message to display
+      } else {
+        setUser(userData);
+        setModalVisible(!modalVisible); // Close modal on success
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-  };
+  };  
 
   return (
     <Modal
@@ -60,7 +68,7 @@ const FormModal = ({ modalVisible, setModalVisible }) => {
       className="m-0"
       useNativeDriver={true}
     >
-      <LoadingModal loadingModal={isSubmitting} />
+      <LoadingModal loadingModal={isLoading} />
       <View className="relative">
         <View className="bg-white m-auto w-[90%] p-4 rounded-xl">
           <View className="items-center space-x-2 flex-row">

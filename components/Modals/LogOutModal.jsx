@@ -9,6 +9,7 @@ import LoadingModal from "./LoadingModal";
 const LogOutModal = ({ modalVisible, setModalVisible }) => {
   const [databaseError, setDatabaseError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  
   const onLogout = async () => {
     setIsLoading(true);
     try {

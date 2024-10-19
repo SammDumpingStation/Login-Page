@@ -18,6 +18,7 @@ const UserContext = ({ children }) => {
         setIsLoading(true);
         if (authId) {
           const { data, error } = await getCurrentUser(authId);
+          
           if (data) {
             setUser(data);
           } else {

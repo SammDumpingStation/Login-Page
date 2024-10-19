@@ -8,15 +8,16 @@ import { supabase } from "@/lib/supabase";
 import { SkypeIndicator } from "react-native-indicators";
 
 const index = () => {
+  
   const { isLoading, setAuthId, user } = useUserContext();
   useEffect(() => {
     const checkUserSession = async () => {
       const { data, error } = await supabase.auth.getSession();
-
       if (error) {
         console.error("Error fetching session:", error);
         return; // Handle error appropriately (e.g., show a message)
       }
+
       if (data.session != null) {
         const userId = data.session.user.id;
         setAuthId(userId);

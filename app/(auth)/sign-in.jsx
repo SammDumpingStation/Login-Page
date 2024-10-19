@@ -24,6 +24,7 @@ const SignIn = () => {
   const { setAuthId } = useUserContext();
   const [databaseError, setDatabaseError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  
   const {
     control,
     handleSubmit,
@@ -97,7 +98,7 @@ const SignIn = () => {
           control={control}
           name="email"
           render={({ field: { onChange, onBlur, value } }) => (
-            <FormInput
+            <FormInput 
               label="email"
               placeholder="Email"
               value={value}

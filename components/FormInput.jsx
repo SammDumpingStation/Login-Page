@@ -33,7 +33,7 @@ const FormInput = ({
           className={`text-base p-4 rounded-lg border ${
             errorMessage
               ? "border border-red-500 bg-[#FFF9F9]"
-              : value.length === 0
+              : !value
               ? "border-[#E5E4E2]"
               : "border-[#5CB88F] bg-[#F8FFFD]"
           }`}

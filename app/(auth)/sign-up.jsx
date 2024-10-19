@@ -135,24 +135,22 @@ const SignUp = () => {
             />
           )}
         />
-        {password >= 8 && (
-          <Controller
-            control={control}
-            name="confirmPassword" // Matches Yup schema key
-            render={({ field: { onChange, onBlur, value } }) => (
-              <FormInput
-                label="password"
-                placeholder="Confirm Password"
-                value={value}
-                errorMessage={
-                  errors.confirmPassword ? errors.confirmPassword.message : ""
-                } // Use formState's errors
-                onBlur={onBlur}
-                onChangeText={onChange}
-              />
-            )}
-          />
-        )}
+        <Controller
+          control={control}
+          name="confirmPassword" // Matches Yup schema key
+          render={({ field: { onChange, onBlur, value } }) => (
+            <FormInput
+              label="password"
+              placeholder="Confirm Password"
+              value={value}
+              errorMessage={
+                errors.confirmPassword ? errors.confirmPassword.message : ""
+              } // Use formState's errors
+              onBlur={onBlur}
+              onChangeText={onChange}
+            />
+          )}
+        />
         <ErrorMessage value={databaseError} />
 
         <View className="bg-white flex-1">
@@ -187,11 +185,8 @@ const SignUp = () => {
 
           <CustomButton
             label="Create Account"
-            otherStyles={`mb-6`}
-            buttonCustomBg={!isCheck}
-            textStyle={!isCheck}
-            disabled={!isCheck ? true : false}
             onPress={handleSubmit(onSubmit)}
+            disabled={isSubmitting || !!databaseError || !isCheck}
             isLoading={isSubmitting}
           />
         </View>
