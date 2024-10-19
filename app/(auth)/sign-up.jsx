@@ -17,11 +17,13 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { signUpSchema } from "@/utils/validation";
 import ErrorMessage from "@/components/ErrorMessage";
+import LoadingModal from "@/components/Modals/LoadingModal";
 
 const SignUp = () => {
   const [databaseError, setDatabaseError] = useState("");
   const { setAuthId } = useUserContext();
   const [isCheck, setIsCheck] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
   const {
     control,
     handleSubmit,
@@ -50,6 +52,7 @@ const SignUp = () => {
 
   //this is the overall logic of the sign in user
   const onSubmit = async (data) => {
+    setIsLoading(true)
     try {
       const { user, error } = await createUser(
         data.email,
@@ -68,6 +71,8 @@ const SignUp = () => {
       }
     } catch (error) {
       console.log("Unexpected error:", error);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -81,6 +86,7 @@ const SignUp = () => {
       <Text className="mt-2 mb-14 text-[40px] text-white font-black px-4">
         Sign Up
       </Text>
+      <LoadingModal loadingModal={isLoading} label="Creating your Account...." />
 
       <View className="pb-4 px-4 pt-8 space-y-2 rounded-tl-3xl rounded-tr-3xl bg-white">
         <Text className="text-2xl font-black">Create an Account</Text>

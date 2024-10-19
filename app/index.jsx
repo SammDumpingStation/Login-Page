@@ -1,6 +1,6 @@
 import { View, Text, Image } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Redirect, router } from "expo-router";
+import { router } from "expo-router";
 import CustomContainer from "@/components/CustomContainer";
 import icons from "@/constants/icons";
 import { useUserContext } from "../context/UserContext";
@@ -9,7 +9,8 @@ import { SkypeIndicator } from "react-native-indicators";
 
 const index = () => {
   
-  const { isLoading, setAuthId, user } = useUserContext();
+  const { isLoading, setAuthId } = useUserContext();
+
   useEffect(() => {
     const checkUserSession = async () => {
       const { data, error } = await supabase.auth.getSession();

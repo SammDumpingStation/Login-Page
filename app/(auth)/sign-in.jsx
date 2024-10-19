@@ -157,8 +157,8 @@ const SignIn = () => {
                   email: "",
                   password: "",
                 });
+                clearErrors(); // Ensure both errors are cleared
               }
-              clearErrors(["email", "password"]); // Ensure both errors are cleared
               setDatabaseError("");
               router.push("/sign-up");
             }}

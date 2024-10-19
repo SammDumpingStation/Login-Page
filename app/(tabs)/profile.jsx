@@ -10,7 +10,7 @@ import LogOutCard from "../../components/Profile/LogOutCard";
 import FormModal from "../../components/Modals/FormModal";
 
 const Profile = () => {
-  const { user, authId } = useUserContext();
+  const { user } = useUserContext();
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
